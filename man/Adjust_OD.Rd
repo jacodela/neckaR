@@ -2,32 +2,33 @@
 % Please edit documentation in R/Adjust_OD.R
 \name{Adjust_OD}
 \alias{Adjust_OD}
-\title{Function that adds extra columns in the master data frame prior further QC
-NOTE
-!!rlang::sym(var_name) converts a string to a variable name to be used in a dplyr verb
-scaling of OD values
-Control curves
-ODc0_adj equals the the scaled ODc0 plus the maximum ODc0 of the plate/run
-(ODc0[dplyr::n()]) times a scaling factor (offset_control) times the remaining
-time (Time[dplyr::n()]-Time)
-The scaling factor accounts for a small increase in OD during the stationary phase
-Determine the cutoff time of each plate of each run
-Value is the maximum adjusted OD of control of the plate
-Join raw OD values with time cutoff}
+\title{Adjust_OD}
 \usage{
 Adjust_OD(curves_df, control_factor, control_level, offset_control)
 }
+\arguments{
+\item{curves_df}{Master data frame containing raw OD measurements and
+Runs and Layout data.}
+
+\item{control_factor}{Name of column in master data frame containing
+treatment information.}
+
+\item{control_level}{Label of the control treatment.
+(e.g. "control", "DMSO", "water")}
+
+\item{offset_control}{Scaling factor used to account for small increases in
+OD during stationary phase.}
+}
+\value{
+A data frame object that adds base-line adjusted OD and cut-off times
+to the input master data frame.
+}
 \description{
-Function that adds extra columns in the master data frame prior further QC
-NOTE
-!!rlang::sym(var_name) converts a string to a variable name to be used in a dplyr verb
-scaling of OD values
-Control curves
-ODc0_adj equals the the scaled ODc0 plus the maximum ODc0 of the plate/run
-(ODc0[dplyr::n()]) times a scaling factor (offset_control) times the remaining
-time (Time[dplyr::n()]-Time)
-The scaling factor accounts for a small increase in OD during the stationary phase
-Determine the cutoff time of each plate of each run
-Value is the maximum adjusted OD of control of the plate
-Join raw OD values with time cutoff
+Baseline-adjust raw OD measurements by subtracting
+the median OD of the controls at time 0 in a given plate from of all other
+measurements and determine the time of transition from exponential to
+stationary phase of the growth curve.
+}
+\examples{
+Adjust_OD(curves_df = master_df, control_factor = "Drug", control_level = "control", offset_control = 0.02)
 }
