@@ -2,18 +2,22 @@
 % Please edit documentation in R/Cumul_min-max.R
 \name{cumulmin}
 \alias{cumulmin}
-\title{Calculate length of input vector
-For each element i  
-Calculate min of the vector starting on 
-position i until end of vector
-Remove i and repeat}
+\title{cumulmin}
 \usage{
 cumulmin(v)
 }
+\arguments{
+\item{v}{a numeric vector}
+}
+\value{
+A vector of the same length of input vector v. Each position i contains
+`min(v[i:N])`
+}
 \description{
-Calculate length of input vector
-For each element i  
-Calculate min of the vector starting on 
-position i until end of vector
-Remove i and repeat
+Given a vector v, for each element i calculate minimum of the v
+starting on position i until end of vector. Remove i and repeat
+}
+\examples{
+vec <- c(1,2,4,2,1)
+cumulmin(v = vec)
 }

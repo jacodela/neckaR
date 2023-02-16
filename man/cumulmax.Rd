@@ -2,16 +2,22 @@
 % Please edit documentation in R/Cumul_min-max.R
 \name{cumulmax}
 \alias{cumulmax}
-\title{For each element i  
-Calculate max of the vector starting on 
-position i until end of vector
-Remove i and repeat}
+\title{cumulmax}
 \usage{
 cumulmax(v)
 }
+\arguments{
+\item{v}{a numeric vector}
+}
+\value{
+A vector of the same length of input vector v. Each position i contains
+`max(v[i:N])`
+}
 \description{
-For each element i  
-Calculate max of the vector starting on 
-position i until end of vector
-Remove i and repeat
+Given a vector v, for each element i calculate maximum of the v
+starting on position i until end of vector. Remove i and repeat
+}
+\examples{
+vec <- c(1,2,4,2,1)
+cumulmax(v = vec)
 }
