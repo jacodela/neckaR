@@ -1,23 +1,22 @@
-#' @title Read_OD_96
+#'	@title Read_OD_96
 #'
-#' @description Reads excel files from TECAN plate reader and converts the data
-#'	into a long data frame object. It assumes that each sheet corresponds to
-#'	a single 96-well plate. Time is converted to hours instead of days. An identifier
-#'	field is created, where digits corresponding to thousands and tens of thousands
-#'	indicate the plate number [1 to #plates]; hundreds indicates the row number [1 to 8];
-#'	tens and units are the columns [1 to 12].
+#'	@description Reads excel files from TECAN plate reader and converts the data
+#'		into a long data frame object. It assumes that each sheet corresponds to
+#'		a single 96-well plate. Time is converted to hours instead of days. An identifier
+#'		field is created, where digits corresponding to thousands and tens of thousands
+#'		indicate the plate number [1 to #plates]; hundreds indicates the row number [1 to 8];
+#'		tens and units are the columns [1 to 12].
 #'
-#' @param filename Full path to an Excel file with OD measurements from
-#'	TECAN plate reader
-#' @param sheet Number of sheet to be read from Excel
-#' @param duration Maximum number of time points measured in the experiment
+#'	@param filename Full path to an Excel file with OD measurements from
+#'		TECAN plate reader
+#'	@param sheet Number of sheet to be read from Excel
+#'	@param duration Maximum number of time points measured in the experiment
 #'
-#' @return A data frame object that contains the OD measurements from a
-#'	single sheet in long format
-#' @examples
-#' plate_path <- "./user_data/example.xlsx"
-#' output_table <- Read_OD_96(filename = plate_path, sheet = 1, duration = 20)
-#' @export
+#'	@return A data frame object that contains the OD measurements from a
+#'		single sheet in long format
+#'	@examples
+#'	  # PENDING
+#'	@export
 Read_OD_96 = function(filename, sheet, duration){
   Raw_results = suppressMessages(readxl::read_excel(path = filename, sheet = sheet))
   ## Second column, where the important data is

@@ -22,5 +22,5 @@ Determine the time of transition from lag phase to
 exponential phase of the growth curve.
 }
 \examples{
-Calculate_lag(curves_df = master_df, offset_control = 0.02)
+  # PENDING
 }

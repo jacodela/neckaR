@@ -1,39 +1,31 @@
-#' @title Make_master_df
+#'	@title Make_master_df
 #'
-#' @description Combines OD measurements with with run and layout information
-#'	of an experiment
+#'	@description Combines OD measurements with with run and layout information
+#'		of an experiment
 #'
-#' @param Data_folder Path to the folder containing Excel files from TECAN plate
-#'	reader
-#' @param Data_files Path to Excel files from TECAN plate reader.
-#' @param Runs_path Path to Runs (a.k.a. Tab1) table
-#' @param Layout_path Path to Layout (a.k.a. Tab2) table
-#' @param Duration Maximum number of time points measured in the experiment
-#' @param Design_tab_col Name of column with design information in Runs and
+#'	@param Data_folder Path to the folder containing Excel files from TECAN plate
+#'		reader
+#'	@param Data_files Path to Excel files from TECAN plate reader.
+#'	@param Runs_path Path to Runs (a.k.a. Tab1) table
+#'	@param Layout_path Path to Layout (a.k.a. Tab2) table
+#'	@param Duration Maximum number of time points measured in the experiment
+#'	@param Design_tab_col Name of column with design information in Runs and
 #'	Layout tables
 #'
-#' @return A data frame object that contains the OD measurements from a
-#'	all the plates from all runs included, combined with the Runs and Layout
-#'	information. Columns correspond to those included in Runs and Layout tables.
-#'	 In addition, `Make_master_df()` creates a series of variables to identify
-#'	 each curve and each measurement. They are:
-#' * `ID`: numeric value where the thousands and tens of thousands positions
-#'			correspond to the plate number [1 to # of plates]. Hundreds position is
-#'			the row number [1 to 8]. Tens and units are the columns [01 to 12].
-#' * `RRPPRCC`: Unique curve identifier, representing
-#'			(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
-#' @examples
-#' # List file locations
-#' data_dir <- "./user_data/"
-#' # List raw plate reader files
-#' Raw_Data_files <- list.files(data_dir, pattern = "RUN")
-#' # Tab1
-#' Runs <- file.path(data_dir, "Tab1.xlsx")
-#' # Tab2
-#' Layout <- file.path(data_dir, "Tab2.xlsx")
-#' master_df <- Make_master_df(Data_folder = data_dir, Data_files = Raw_Data_files, Runs_path = Runs, Layout_path = Layout, Design_tab_col = "Design")
+#'	@return A data frame object that contains the OD measurements from a
+#'		all the plates from all runs included, combined with the Runs and Layout
+#'		information. Columns correspond to those included in Runs and Layout tables.
+#'		In addition, `Make_master_df()` creates a series of variables to identify
+#'		each curve and each measurement. They are:
+#'		* `ID`: numeric value where the thousands and tens of thousands positions
+#'		correspond to the plate number [1 to # of plates]. Hundreds position is
+#'		the row number [1 to 8]. Tens and units are the columns [01 to 12].
+#'		* `RRPPRCC`: Unique curve identifier, representing
+#'		(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
 #'
-#' @export
+#'	@examples
+#'	  # PENDING
+#'	@export
 Make_master_df = function(Data_folder,
 													Data_files,
 													Runs_path,
@@ -47,8 +39,8 @@ Make_master_df = function(Data_folder,
 	Layout_df = readxl::read_excel(path = Layout_path, sheet = 1)
 
 	## Prepare table names to work with functions
-	colnames(Runs_df) = fix_table_names(colnames(Runs_df))
-	colnames(Layout_df) = fix_table_names(colnames(Layout_df))
+	colnames(Runs_df) = Fix_table_names(colnames(Runs_df))
+	colnames(Layout_df) = Fix_table_names(colnames(Layout_df))
 
 	## Determine number of runs
 	number_runs = Runs_df %>%

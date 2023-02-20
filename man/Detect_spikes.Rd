@@ -2,18 +2,32 @@
 % Please edit documentation in R/Detect_spikes.R
 \name{Detect_spikes}
 \alias{Detect_spikes}
-\title{Create data frame with the ODc0 values of t0 and lag time of each curve
-Join with original df to determine if a point is a potential spike:
-Spike if ODc0 is higher than in lag time. Optionally, an offset can be
-added to the lag OD value to modify how sensitive the detection is. 
-The higher the offset value, the less sensitive the detection of spikes}
+\title{Detect_spikes}
 \usage{
-Detect_spikes(CGs, ODs_offset = 0)
+Detect_spikes(curves_df, offset_control = 0)
+}
+\arguments{
+\item{curves_df}{Master data frame containing adjusted OD measurements, cut-off
+values and Runs and Layout data. Note that the end of lag phase time should be included.}
+
+\item{offset_control}{Value added to the OD of end of lag phase to adjust
+how sensitive the spike detection is.}
+}
+\value{
+A data frame object that a variable marking whether a point is a potential
+	spike
 }
 \description{
-Create data frame with the ODc0 values of t0 and lag time of each curve
-Join with original df to determine if a point is a potential spike:
-Spike if ODc0 is higher than in lag time. Optionally, an offset can be
-added to the lag OD value to modify how sensitive the detection is. 
-The higher the offset value, the less sensitive the detection of spikes
+Identify whether an OD measurement is an spike, that is,
+	an unexpected increase that is seen only once in the early time points.
+	Here, a potential spiked is called when ODc0 is higher than the OD of the
+	point corresponding to the end of lag phase. Optionally, an offset can be
+	added to the lag OD value to modify how sensitive the detection is.
+	The higher the offset value, the less sensitive the detection of spikes
+}
+\examples{
+  # PENDING
+}
+\seealso{
+[Mark_artefacts()] for other method of spike detection.
 }

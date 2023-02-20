@@ -2,26 +2,21 @@
 % Please edit documentation in R/Calculate_AUC.R
 \name{Calculate_AUC_single}
 \alias{Calculate_AUC_single}
-\title{Function to calculate the AUC
-It breaks down the curve into a series of rectangles
-of height equals to the mean OD of two adjacent measurements
-and width equals to the time difference between such adjacent measurements
-Number of measurements
-AUC cannot be calculated with < 2 measurements
-Vectors of indices of adjacent measurements
-Calculate vectors of heights and widths
-Return sum of rectangles as AUC}
+\title{@title Calculate_AUC_single}
 \usage{
 Calculate_AUC_single(OD, Time)
 }
 \description{
-Function to calculate the AUC
-It breaks down the curve into a series of rectangles
-of height equals to the mean OD of two adjacent measurements
-and width equals to the time difference between such adjacent measurements
-Number of measurements
-AUC cannot be calculated with < 2 measurements
-Vectors of indices of adjacent measurements
-Calculate vectors of heights and widths
-Return sum of rectangles as AUC
+@description Calculate area under the curve (AUC) of a single growth curve
+	using the trapezoidal method. The curve is broken down into a series of
+	rectangles of height equal to the mean OD of two adjacent measurements
+	and width equal to the time difference between such measurements.
+	The sum of the area of the rectangles is the AUC.
+}
+\details{
+@param OD Vector with optical density measurements over time
+ @param Time Time values corresponding to the OD measurements
+
+ @return Numeric value of AUC
+ @export
 }

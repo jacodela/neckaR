@@ -1,18 +1,18 @@
-#' @title Calculate_lag
+#'	@title Calculate_lag
 #'
-#' @description Determine the time of transition from lag phase to
-#' exponential phase of the growth curve.
+#'	@description Determine the time of transition from lag phase to
+#'	exponential phase of the growth curve.
 #'
-#' @param curves_df Master data frame containing adjusted OD measurements, cut-off
+#'	@param curves_df Master data frame containing adjusted OD measurements, cut-off
 #'	values and	Runs and Layout data.
-#' @param offset_control Scaling factor used to account for small increases in
-#'  OD during stationary phase.
+#'	@param offset_control Scaling factor used to account for small increases in
+#'	 OD during stationary phase.
 #'
-#' @return A data frame object that adds end of lag phase time to the input
-#'  master data frame.
-#' @examples
-#' Calculate_lag(curves_df = master_df, offset_control = 0.02)
-#' @export
+#'	@return A data frame object that adds end of lag phase time to the input
+#'	 master data frame.
+#'	@examples
+#'	  # PENDING
+#'	@export
 Calculate_lag = function(curves_df, offset_control = 0.02){
 
   # offset_control sets the change in OD required for a curve to not considered flat

@@ -16,17 +16,16 @@ TECAN plate reader}
 }
 \value{
 A data frame object that contains the OD measurements from a
-single sheet in long format
+	single sheet in long format
 }
 \description{
 Reads excel files from TECAN plate reader and converts the data
-into a long data frame object. It assumes that each sheet corresponds to
-a single 96-well plate. Time is converted to hours instead of days. An identifier
-field is created, where digits corresponding to thousands and tens of thousands
-indicate the plate number [1 to #plates]; hundreds indicates the row number [1 to 8];
-tens and units are the columns [1 to 12].
+	into a long data frame object. It assumes that each sheet corresponds to
+	a single 96-well plate. Time is converted to hours instead of days. An identifier
+	field is created, where digits corresponding to thousands and tens of thousands
+	indicate the plate number [1 to #plates]; hundreds indicates the row number [1 to 8];
+	tens and units are the columns [1 to 12].
 }
 \examples{
-plate_path <- "./user_data/example.xlsx"
-output_table <- Read_OD_96(filename = plate_path, sheet = 1, duration = 20)
+  # PENDING
 }
