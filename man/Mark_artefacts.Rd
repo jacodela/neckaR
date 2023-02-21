@@ -2,46 +2,10 @@
 % Please edit documentation in R/Mark_artefacts.R
 \name{Mark_artefacts}
 \alias{Mark_artefacts}
-\title{Determine is a given time point is below than cutoff time
-And truncate curves at cutoff
-Calculate ODc01
-ODc01 is a normalized OD value
-value of 1 represents the “maximum growth” observed in the plate, where 0 is no growth
-Flag abnormal curves:
-Calculate mean and sd values of ODc01 of controls
-Curves with `abnormal_t0` are those with a high t0 OD values the mean and
-SD values of controls
-Flag abnormalities by determining points that seem to be spikes:
-It assumes that OD values are constantly increasing or at least not decreasing
-Determine if a point is `increased`, i.e. whether the OD at a given time
-is greater that the minimum OD value in the remaining section of the curve
-plus an offset value, which corresponds to n times the SD of controls at 
-time 0. Then the number of spikes is added up and curves with a number above
-a certain threshold are marked as abnormal
-Flag abnormalities according distribution of deltas:
-The mark artifacts function uses the difference between two consecutive 
-measurements (delta) and two consecutive deltas (delta2) to find abnormal
-curves.
-It assumes that that delta and delta2 follow an exponential distribution 
-within a given strain. The `fitdistrplus::fitdist` function, fits an 
-exponential distribution to the observed set of deltas and extracts the rate
-(a.k.a lambda) from that particular fit. Using the `pexp` function, for each
-delta and delta2, it calculates the probability of observing a value equals 
-to or greater than it (*note* the lower.tail = FALSE) using an exponential
-distribution with the calculated rate (a.k.a. lambda or `estimate`).
-Finally, it marks an abnormality if, for a given curve, the smallest observed
-delta and delta2 have a probability below the given thresholds. 
-The value of these thresholds can be changed according to how stringent
-the abnormality detection wants to be: Smaller p_delta and p_delta2 values
-make the filtering more lenient, higher values are more strict
-The interpretation of this detection can be briefly explained as follows: 
-for a given curve, if the minimum delta and delta2 values have a high value
-in comparison to the overall distribution within a given strain
-then the probability of observing it will be low, therefore the curve will 
-be marked as an abnormality.}
+\title{Mark_artefacts}
 \usage{
 Mark_artefacts(
-  GCs,
+  curves_df,
   sum_inc = 3,
   increased_sd = 2,
   t0_sd = 3,
@@ -49,42 +13,68 @@ Mark_artefacts(
   p_delta2 = 0.001
 )
 }
+\arguments{
+\item{curves_df}{Master data frame containing raw OD measurements and
+Runs and Layout data.}
+
+\item{sum_inc}{Maximum number of spikes allowed in a given curve. Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make the detection more strict.}
+
+\item{increased_sd}{Number of times the SD of controls at time 0 for the detection of spikes in OD. Smaller values make the detection more strict.}
+
+\item{t0_sd}{Number of OD standard deviations of controls at time 0 above which the starting OD of a given curve is marked as abnormal. Smaller values make the detection more strict.}
+
+\item{p_delta}{Probability delta values of two consecutive OD measurements equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.}
+
+\item{p_delta2}{Probability delta values of two consecutive delta values equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.}
+}
+\value{
+A data frame object that normalized OD, the result of each of the
+	tests and whether a given curve is marked as abnormal to the input master
+	data frame.
+}
 \description{
-Determine is a given time point is below than cutoff time
-And truncate curves at cutoff
-Calculate ODc01
-ODc01 is a normalized OD value
-value of 1 represents the “maximum growth” observed in the plate, where 0 is no growth
-Flag abnormal curves:
-Calculate mean and sd values of ODc01 of controls
-Curves with `abnormal_t0` are those with a high t0 OD values the mean and
-SD values of controls
-Flag abnormalities by determining points that seem to be spikes:
-It assumes that OD values are constantly increasing or at least not decreasing
-Determine if a point is `increased`, i.e. whether the OD at a given time
-is greater that the minimum OD value in the remaining section of the curve
-plus an offset value, which corresponds to n times the SD of controls at 
-time 0. Then the number of spikes is added up and curves with a number above
-a certain threshold are marked as abnormal
-Flag abnormalities according distribution of deltas:
-The mark artifacts function uses the difference between two consecutive 
-measurements (delta) and two consecutive deltas (delta2) to find abnormal
-curves.
-It assumes that that delta and delta2 follow an exponential distribution 
-within a given strain. The `fitdistrplus::fitdist` function, fits an 
-exponential distribution to the observed set of deltas and extracts the rate
-(a.k.a lambda) from that particular fit. Using the `pexp` function, for each
-delta and delta2, it calculates the probability of observing a value equals 
-to or greater than it (*note* the lower.tail = FALSE) using an exponential
-distribution with the calculated rate (a.k.a. lambda or `estimate`).
-Finally, it marks an abnormality if, for a given curve, the smallest observed
-delta and delta2 have a probability below the given thresholds. 
-The value of these thresholds can be changed according to how stringent
-the abnormality detection wants to be: Smaller p_delta and p_delta2 values
-make the filtering more lenient, higher values are more strict
-The interpretation of this detection can be briefly explained as follows: 
-for a given curve, if the minimum delta and delta2 values have a high value
-in comparison to the overall distribution within a given strain
-then the probability of observing it will be low, therefore the curve will 
-be marked as an abnormality.
+Calculates a normalized OD value based on the maximum growth observed
+	in the controls of a given plate. Then, uses the normalized OD to determine whether
+	a curve shows an abnormal behavior. The function perform several tests to determine
+	whether a curve is abnormal and marks them as such if at least one test is failed.
+
+	Before identifying faulty curves, the function truncates curves at the time of
+	transition from exponential to stationary phase. Then, it calculates a normalized
+	OD, called `ODc01`. This normalized OD ranges from 0 to 1, where values
+	represent the median growth of the controls at time 0 and the the start of
+	stationary phase, in other words, they are the minimum and maximum observed
+	ODs of controls in the plate.
+
+	Then, for each curve, the following possible abnormalities are evaluated:
+	* High staring OD: The mean and SD values of `ODc01` of control curves at
+	time 0 are calculated. The OD at time 0 of each curve is compared to the mean
+	of the controls and those that are above a certain number of standard
+	deviations (`t0_sd`) will be flagged as abnormal. The value of the SD threshold
+	can be specified by the user. Lower `t0_sd` values make the filtering more strict.
+	* Spike measurements: certain curves may have an abnormally increased OD in
+	the earlier time points that then go down. However, we assume that OD values are
+	increasing in time (or at least not decreasing). To detect these points, the
+	function determines whether the OD at a given time is greater that the minimum
+	OD in the remaining section of the curve, plus an offset value which corresponds
+	to n times the SD of controls at time 0 (`increased_sd`). Then the number of
+	spikes is added up and curves with a number above a certain threshold (`sum_inc`)
+	are marked as abnormal. Smaller `increased_sd` and `sum_inc` values make the
+	filtering more strict.
+	* Distribution of deltas: the difference between two consecutive measurements
+	(`delta`) and two consecutive deltas (`delta2`) is used to find abnormal curves.
+	It assumes that that `delta` and `delta2` follow exponential distributions
+	within a given strain. A parameter of the exponential distribution is obtained
+	and the the probability of observing a value that is equal to or greater than it
+	is calculated. A curve is marked as an abnormality if the smallest observed
+	`delta` and `delta2` have a probability below a threshold specified by the user.
+	The interpretation of this detection can be briefly explained as follows:
+	for a given curve, if the minimum `delta` and `delta2` values have a high value
+	in comparison to the overall distribution within all curves from the strain, then
+	the probability of observing it will be low, therefore the curve will be marked as
+	an abnormality. The value of these thresholds can be changed according to how
+	stringent we want to make the abnormality detection: smaller `p_delta` and
+	`p_delta2` values make the filtering more lenient, higher values are more strict.
+}
+\examples{
+# PENDING
 }
