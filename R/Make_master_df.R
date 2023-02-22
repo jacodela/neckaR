@@ -70,10 +70,7 @@ Make_master_df = function(Data_folder,
 				dplyr::mutate(RRPPRCC = rn * 100000 + ID, ## Add identifier (Run, Run, Plate, Plate, Row, Column, Column)
 											Position = as.numeric(substr(ID, nchar(ID)-2, nchar(ID)))) %>%
 				dplyr::bind_cols(slice(Runs_df, index)) %>%  ## Add corresponding data from Runs table
-				dplyr::left_join(., Layout_df, by = c("Position", Design_tab_col)) %>%
-				dplyr::select(OD, Time, Position, Run, Plate,
-											Design, Strain, Replicate, Drug,
-											Drug_name, ID, RRPPRCC)
+				dplyr::left_join(., Layout_df, by = c("Position", Design_tab_col))
 		}
 		)
 
