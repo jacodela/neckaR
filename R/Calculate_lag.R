@@ -45,8 +45,22 @@ Calculate_lag = function(curves_df, offset_control = 0.02){
     dplyr::mutate(lag_time = round(mean(Time), digits = 1)) %>%
     dplyr::ungroup() %>%
     dplyr::select(RRPPRCC, lag_time)
-  # #
-  # # Join raw OD values with time cutoff
-  out_lags = dplyr::left_join(curves_df, Lag_times, by = "RRPPRCC")
+
+  # Join raw OD values with time cutoff
+  full_lags = dplyr::left_join(curves_df, Lag_times, by = "RRPPRCC")
+
+  # Set lag time of controls within plate and strain equal to median
+  control_lags = full_lags %>%
+  	dplyr::filter(Control == TRUE) %>%
+  	dplyr::group_by(RRPP, Strain) %>%
+  	dplyr::mutate(lag_time = round(median(lag_time))) %>%
+  	ungroup()
+
+  non_control_lags = full_lags %>%
+  	dplyr::filter(Control == FALSE)
+
+  # Combine lag times of controls and non controls
+  out_lags = dplyr::bind_rows(control_lags, non_control_lags) %>%
+  	dplyr::arrange(RRPPRCC)
   out_lags
 }

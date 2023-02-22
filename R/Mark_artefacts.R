@@ -65,8 +65,8 @@ Mark_artefacts = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
   ## And truncate curves at cutoff
   GCsf_A = curves_df %>%
   	dplyr::filter(Time < (cutoff_time + 0.5)) %>%
-    dplyr::mutate(leq_cutoff = Time < (cutoff_time + 0.5)) %>%
-    dplyr::arrange(Time)
+  	dplyr::arrange(Time) %>%
+    dplyr::mutate(leq_cutoff = Time < (cutoff_time + 0.5))
 
   ## Calculate ODc01
   ## ODc01 is a normalized OD value
@@ -103,7 +103,7 @@ Mark_artefacts = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
   GCsf_D = GCsf_C %>%
     dplyr::group_by(RRPPRCC) %>%
     dplyr::mutate(increased = (ODc01 > (increased_sd * sd_control_start_OD + cumulmin(ODc01))) & (Time < max(Time[leq_cutoff])/2),
-                  sum_inc = sum(increased),
+                  # sum_inc = sum(increased),
                   is_increased = (sum(increased) > sum_inc),
                   abnormal_t0 = !(min(ODc01[Time < 1.5]) < t0_sd * sd_control_start_OD),
                   signif_delta = (min(pdelta, na.rm=T) < p_delta),

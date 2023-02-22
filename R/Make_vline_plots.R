@@ -40,11 +40,11 @@ Make_cutoff_plots = function(curves_df, save_plots = FALSE,
       ggplot2::geom_vline(aes(xintercept = cutoff_time))
   } else if (vline == "lag"){
     cutoff_plot = cutoff_plot +
-      ggplot2::geom_vline(aes(xintercept = lag_time))
+      ggplot2::geom_vline(aes(xintercept = lag_time),linetype = "dashed")
   } else if (vline == "both"){
     cutoff_plot = cutoff_plot +
       ggplot2::geom_vline(aes(xintercept = cutoff_time)) +
-      ggplot2::geom_vline(aes(xintercept = lag_time))
+      ggplot2::geom_vline(aes(xintercept = lag_time), linetype = "dashed")
   }
 
   # Optional: save plot to pdf
