@@ -52,7 +52,7 @@
 #'	@param t0_sd Number of OD standard deviations of controls at time 0 above which the starting OD of a given curve is marked as abnormal. Smaller values make the detection more strict.
 #'	@param p_delta Probability delta values of two consecutive OD measurements equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
 #'	@param p_delta2 Probability delta values of two consecutive delta values equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
-#'	@return A data frame object that normalized OD, the result of each of the
+#'	@return A data frame object with the normalized OD, the result of each of the
 #'		tests and whether a given curve is marked as abnormal to the input master
 #'		data frame.
 #'	@examples

@@ -28,7 +28,7 @@ Runs and Layout data.}
 \item{p_delta2}{Probability delta values of two consecutive delta values equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.}
 }
 \value{
-A data frame object that normalized OD, the result of each of the
+A data frame object with the normalized OD, the result of each of the
 	tests and whether a given curve is marked as abnormal to the input master
 	data frame.
 }
