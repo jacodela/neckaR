@@ -15,7 +15,9 @@ used by the Maier Lab at the University of Tübingen, Germany.
 
 ## Citation
 
-If you use `neckaR`, please cite \> Citation needed
+If you use `neckaR`, please cite
+
+> Citation needed
 
 The functions contained in `neckaR` are based on the code used in the
 paper:
