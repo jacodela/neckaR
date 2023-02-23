@@ -55,8 +55,6 @@
 #'	@return A data frame object with the normalized OD, the result of each of the
 #'		tests and whether a given curve is marked as abnormal to the input master
 #'		data frame.
-#'	@examples
-#'	# PENDING
 #'	@export
 Mark_artefacts = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
                           p_delta = 1e-3, p_delta2 = 1e-3) {

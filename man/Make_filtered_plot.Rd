@@ -29,6 +29,3 @@ A list of ggplot2 plots of OD over time. Each plot contains all the
 \description{
 Plot all technical replicates from the same run-plate-strain-biological replicate combination
 }
-\examples{
-# PENDING
-}

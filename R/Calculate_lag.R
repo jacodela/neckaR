@@ -10,8 +10,6 @@
 #'
 #'	@return A data frame object that adds end of lag phase time to the input
 #'	 master data frame.
-#'	@examples
-#'	  # PENDING
 #'	@export
 Calculate_lag = function(curves_df, offset_control = 0.02){
 
@@ -54,7 +52,7 @@ Calculate_lag = function(curves_df, offset_control = 0.02){
   	dplyr::filter(Control == TRUE) %>%
   	dplyr::group_by(RRPP, Strain) %>%
   	dplyr::mutate(lag_time = round(median(lag_time))) %>%
-  	ungroup()
+  	dplyr::ungroup()
 
   non_control_lags = full_lags %>%
   	dplyr::filter(Control == FALSE)

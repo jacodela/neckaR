@@ -28,6 +28,3 @@ A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biologica
 \description{
 Plot all technical replicates from the same run-plate-strain-biological replicate combination
 }
-\examples{
-  # PENDING
-}

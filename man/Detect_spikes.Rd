@@ -25,9 +25,6 @@ Identify whether an OD measurement is an spike, that is,
 	added to the lag OD value to modify how sensitive the detection is.
 	The higher the offset value, the less sensitive the detection of spikes
 }
-\examples{
-  # PENDING
-}
 \seealso{
 [Mark_artefacts()] for other method of spike detection.
 }

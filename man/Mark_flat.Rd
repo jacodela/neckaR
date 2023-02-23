@@ -34,6 +34,3 @@ A data frame object with the result of the test of whether the curve
 \description{
 Determine whether each curve in a data frame is flat.
 }
-\examples{
-# PENDING
-}

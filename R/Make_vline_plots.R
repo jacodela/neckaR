@@ -17,8 +17,6 @@
 #'	@return A single ggplot2 plot of raw OD over time of control curves, faceted
 #'		by `RRPP` (Run and Plate identifier) with vertical lines indicating end
 #'		of lag or exponential phases.
-#'	@examples
-#'	  # PENDING
 #'	@seealso [Adjust_OD()] and [Calculate_lag] for calculation of end of lag and exponential phases.
 #'	@export
 Make_cutoff_plots = function(curves_df, save_plots = FALSE,
@@ -53,7 +51,7 @@ Make_cutoff_plots = function(curves_df, save_plots = FALSE,
     plot_filename = paste0(plot_name, ".pdf")
     # Save
     ggplot2::ggsave(filename=file.path(plots_dir, plot_filename),
-                    plot = cutoff_plot, device = cairo_pdf,
+                    plot = cutoff_plot, device = grDevices::cairo_pdf,
                     width = 297, height = 210, units = "mm") #save the growth curves
   }
   # Return
@@ -113,7 +111,7 @@ Make_lag_plots = function(curves_df, OD_col = "OD",
                                         st = Plot_label["Strain"],
                                         rp = Plot_label[".rep"])
       # Save
-      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
+      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = grDevices::cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
     }
   })
 }

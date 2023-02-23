@@ -16,8 +16,6 @@
 #'
 #'	 @return A data frame object that adds base-line adjusted OD and cut-off times
 #'		to the input master data frame.
-#'	 @examples
-#'	  # PENDING
 #'	 @export
 Adjust_OD = function(curves_df, control_factor, control_level, offset_control){
 

@@ -55,12 +55,7 @@ Calculate_AUC_single <- function(OD, Time) {
 #'	@return A data frame object that contains, for each curve, the normalized AUC
 #'		value selected, as well as raw and re-calculated OD values, detected abnormalities,
 #'		run, plate, replicate and other curve data.
-#'
-#'		@example
-#'	  # PENDING
-#'
 #'	@export
-
 Calculate_AUC = function(curves_df, ...){
 
   ## Recalculate ODc01 after cut-off
@@ -111,7 +106,7 @@ Calculate_AUC = function(curves_df, ...){
   ## Add conditions info
   Norm_AUCs_df = AUCs_df %>%
     dplyr::left_join(info_df) %>%
-    dplyr::mutate(normAUC = if_else(abs(normAUC_scaled - 1) < abs(normAUC_shifted - 1),
+    dplyr::mutate(normAUC = dplyr::if_else(abs(normAUC_scaled - 1) < abs(normAUC_shifted - 1),
                                     normAUC_scaled, normAUC_shifted),
                   PP = substr(RRPP, nchar(RRPP) - 1, nchar(RRPP))) %>%
     dplyr::group_by(RRPPRCC) %>%

@@ -24,7 +24,5 @@ Adjust_OD(curves_df, control_factor, control_level, offset_control)
 
  @return A data frame object that adds base-line adjusted OD and cut-off times
 	to the input master data frame.
- @examples
-  # PENDING
  @export
 }

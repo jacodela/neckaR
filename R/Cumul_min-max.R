@@ -39,7 +39,6 @@ cumulmin <- function(v) {
 #'	vec <- c(1,2,4,2,1)
 #'	cumulmax(v = vec)
 #'	@export
-
 cumulmax <- function(v) {
   N <- length(v)
   if (N==0) return()

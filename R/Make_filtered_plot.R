@@ -11,11 +11,7 @@
 #'	@return A list of ggplot2 plots of OD over time. Each plot contains all the
 #'		curves from a given run-plate-strain-biological replicate combination, with
 #'		curves marked as abnormal highlighted.
-#'
-#'	@examples
-#'	# PENDING
 #'	@export
-#'
 # Function to plot all technical replicates from the same run-plate-strain-biological replicate combination
 Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
   # Split master data frame into individual dfs
@@ -63,7 +59,7 @@ Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, rep
                                         st = Plot_label["Strain"],
                                         rp = Plot_label[".rep"])
       # Save
-      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
+      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = grDevices::cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
     }
     # Return map
     out_plot

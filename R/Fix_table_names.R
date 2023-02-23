@@ -7,8 +7,6 @@
 #'	@param col_names Vector of column names to repair
 #'
 #'	@return A vector of same length as `col_names` with repaired names
-#'	@examples
-#'	  # PENDING
 #'   @export
 Fix_table_names = function(col_names){
   fixed_names = col_names %>%

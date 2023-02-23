@@ -14,9 +14,6 @@ filtering abnormal growth curves}
 A data frame object that contains, for each curve, the normalized AUC
 	value selected, as well as raw and re-calculated OD values, detected abnormalities,
 	run, plate, replicate and other curve data.
-
-	@example
-  # PENDING
 }
 \description{
 Calculate normalized area under the curve (AUC) of a series of

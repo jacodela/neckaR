@@ -14,9 +14,6 @@
 #'		so that the 'flat' label is removed. Smaller values make the marking more strict.
 #'
 #'	@return A logical value of whether a curve is considered flat or not.
-#'
-#'	@examples
-#'	# PENDING
 Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 
 	# Select positions corresponding to
@@ -39,7 +36,7 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 	## Filter curves_df to quartile measurements
 	points_df = curves_df %>%
 		dplyr::slice(quartiles) %>%
-		dplyr::select(Time, all_of(OD_col)) %>%
+		dplyr::select(Time, dplyr::all_of(OD_col)) %>%
 		dplyr::mutate(Difference = !!rlang::sym(OD_col) - origin)
 
 	mean_diff = mean(points_df$Difference)
@@ -71,13 +68,10 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 #'
 #'	@return A data frame object with the result of the test of whether the curve
 #'		is flat added to the input master data frame.
-#'
-#'	@examples
-#'	# PENDING
 Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, group_var = "RRPPRCC", last_OD = 1) {
 	curves_df %>%
 		dplyr::group_split(!!rlang::sym(group_var)) %>%
-		purrr::map_df(function(x) mutate(x, flat = Mark_flat_single(x,
+		purrr::map_df(function(x) dplyr::mutate(x, flat = Mark_flat_single(x,
 																																OD_col = OD_col,
 																																OD_diff_cutoff = OD_diff_cutoff,
 																																last_OD = last_OD)))

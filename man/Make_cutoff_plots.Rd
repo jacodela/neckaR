@@ -37,9 +37,6 @@ Plot growth curves of controls and add vertical lines indicating
 	(e.g `110` corresponds to Run `1 `and plate `10`). Each facet in shows the curves
 	corresponding to the controls of a particular plate.
 }
-\examples{
-  # PENDING
-}
 \seealso{
 [Adjust_OD()] and [Calculate_lag] for calculation of end of lag and exponential phases.
 }

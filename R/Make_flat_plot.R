@@ -44,7 +44,7 @@ Make_flat_plot = function(Master_df, save_plots = FALSE, plots_dir = NA, replica
                                         st = Plot_label["Strain"],
                                         rp = Plot_label[".rep"])
       # Save
-      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
+      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = grDevices::cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
     }
     # Return map
     out_plot

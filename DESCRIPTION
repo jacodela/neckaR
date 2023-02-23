@@ -23,7 +23,14 @@ Imports:
     purrr,
     vctrs,
     fitdistrplus,
-    readxl
+    readxl,
+    magrittr,
+    rlang,
+    grDevices,
+    stats
+Suggests:
+    anomalize,
+    broom
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3

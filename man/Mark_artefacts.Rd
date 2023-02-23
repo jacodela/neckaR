@@ -75,6 +75,3 @@ Calculates a normalized OD value based on the maximum growth observed
 	stringent we want to make the abnormality detection: smaller `p_delta` and
 	`p_delta2` values make the filtering more lenient, higher values are more strict.
 }
-\examples{
-# PENDING
-}

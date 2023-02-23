@@ -27,6 +27,3 @@ A logical value of whether a curve is considered flat or not.
 \description{
 Determine whether a single growth curve is flat
 }
-\examples{
-# PENDING
-}

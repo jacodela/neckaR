@@ -17,8 +17,6 @@
 #'
 #'	@seealso [Mark_artefacts()] for other method of spike detection.
 #'
-#'	@examples
-#'	  # PENDING
 #'	@export
 Detect_spikes = function(curves_df, offset_control = 0){
 
@@ -27,8 +25,8 @@ Detect_spikes = function(curves_df, offset_control = 0){
     dplyr::group_by(RRPPRCC) %>%
     dplyr::filter(lag_time == floor(Time) | Time < 1) %>%
     dplyr::select(RRPPRCC, ODc0, Time) %>%
-    dplyr::mutate(tmp_OD = row_number(Time),
-                  tmp_OD = if_else(tmp_OD == 1, "ODc0_t0", "ODc0_lag")) %>%
+    dplyr::mutate(tmp_OD = dplyr::row_number(Time),
+                  tmp_OD = dplyr::if_else(tmp_OD == 1, "ODc0_t0", "ODc0_lag")) %>%
     dplyr::ungroup()  %>%
     dplyr::select(-Time) %>%
     tidyr::pivot_wider(values_from = ODc0, names_from = tmp_OD)

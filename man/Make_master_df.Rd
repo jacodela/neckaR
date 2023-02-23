@@ -44,6 +44,3 @@ A data frame object that contains the OD measurements from a
 Combines OD measurements with with run and layout information
 	of an experiment
 }
-\examples{
-  # PENDING
-}

@@ -21,11 +21,8 @@ A data frame object that a variable marking whether a point is a potential
 Manually replace end of lag or exponential phase cut-off values
  	after automatic method.
 }
-\examples{
-  # PENDING
-  @export
-}
 \seealso{
 [Adjust_OD()] and [Calculate_lag()] for determination of end of
 	lag and exponential phases
+  @export
 }

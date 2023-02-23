@@ -21,6 +21,3 @@ A data frame object that adds end of lag phase time to the input
 Determine the time of transition from lag phase to
 exponential phase of the growth curve.
 }
-\examples{
-  # PENDING
-}

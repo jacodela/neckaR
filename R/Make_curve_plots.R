@@ -10,9 +10,6 @@
 #'
 #'	@return A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biological
 #'		replicate combination.
-#'
-#'	@examples
-#'	  # PENDING
 #'	@export
 Make_curve_plots = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
 
@@ -59,7 +56,7 @@ Make_curve_plots = function(curves_df, save_plots = FALSE, plots_dir = NA, repli
                                         st = Plot_label["Strain"],
                                         rp = Plot_label[".rep"])
       # Save
-      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
+      ggplot2::ggsave(filename=file.path(plots_dir, plot_filename), plot = out_plot, device = grDevices::cairo_pdf, width = 297, height = 210, units = "mm") #save the growth curves
     }
 
     # Return map

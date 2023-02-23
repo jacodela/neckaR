@@ -22,9 +22,6 @@
 #'		the row number [1 to 8]. Tens and units are the columns [01 to 12].
 #'		* `RRPPRCC`: Unique curve identifier, representing
 #'		(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
-#'
-#'	@examples
-#'	  # PENDING
 #'	@export
 Make_master_df = function(Data_folder,
 													Data_files,
@@ -69,7 +66,7 @@ Make_master_df = function(Data_folder,
 								 sheet = plt, duration = Duration) %>%
 				dplyr::mutate(RRPPRCC = rn * 100000 + ID, ## Add identifier (Run, Run, Plate, Plate, Row, Column, Column)
 											Position = as.numeric(substr(ID, nchar(ID)-2, nchar(ID)))) %>%
-				dplyr::bind_cols(slice(Runs_df, index)) %>%  ## Add corresponding data from Runs table
+				dplyr::bind_cols(dplyr::slice(Runs_df, index)) %>%  ## Add corresponding data from Runs table
 				dplyr::left_join(., Layout_df, by = c("Position", Design_tab_col))
 		}
 		)

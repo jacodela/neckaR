@@ -12,8 +12,6 @@
 #'		spike
 #'	@seealso [Adjust_OD()] and [Calculate_lag()] for determination of end of
 #'		lag and exponential phases
-#'	@examples
-#'	  # PENDING
 #'   @export
 Fix_cutoff = function(df, RRPPs_cutoff, fix_lag = FALSE){
 
@@ -27,7 +25,7 @@ Fix_cutoff = function(df, RRPPs_cutoff, fix_lag = FALSE){
 
     # Replace values
     df_new = df_new %>%
-      dplyr::mutate(cutoff_time = if_else(RRPP == RRPP_index, new_time, cutoff_time))
+      dplyr::mutate(cutoff_time = dplyr::if_else(RRPP == RRPP_index, new_time, cutoff_time))
   }
   # Return
   df_new

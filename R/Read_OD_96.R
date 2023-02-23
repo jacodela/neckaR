@@ -14,8 +14,6 @@
 #'
 #'	@return A data frame object that contains the OD measurements from a
 #'		single sheet in long format
-#'	@examples
-#'	  # PENDING
 #'	@export
 Read_OD_96 = function(filename, sheet, duration){
   Raw_results = suppressMessages(readxl::read_excel(path = filename, sheet = sheet))
@@ -50,7 +48,7 @@ Read_OD_96 = function(filename, sheet, duration){
 
   ## Create matrix of OD measurements
   OD = Raw_results[(Time_index[1]+1):(Time_index[1]+length(Time_hours)),4:99]
-  OD2 = as.data.frame(dplyr::mutate(OD, across(everything(), as.numeric)))
+  OD2 = as.data.frame(dplyr::mutate(OD, dplyr::across(dplyr::everything(), as.numeric)))
 
   ## Add times and IDs to OD wide data frame
   colnames(OD2) = Identifier

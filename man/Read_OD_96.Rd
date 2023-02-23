@@ -26,6 +26,3 @@ Reads excel files from TECAN plate reader and converts the data
 	indicate the plate number [1 to #plates]; hundreds indicates the row number [1 to 8];
 	tens and units are the columns [1 to 12].
 }
-\examples{
-  # PENDING
-}
