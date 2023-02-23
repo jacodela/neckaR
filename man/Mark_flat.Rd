@@ -24,12 +24,14 @@ growth curve and and the first measurement. If this value is  below a user-defin
 threshold, the curve will be flagged as flat. Smaller values make the marking
 more strict.}
 
+\item{group_var}{Name of variable to be used for grouping before checking if curve is flat.}
+
 \item{last_OD}{Minimum OD value that a curve should reach in last measurement
 so that the 'flat' label is removed. Smaller values make the marking more strict.}
 }
 \value{
 A data frame object with the result of the test of whether the curve
-	is flat added to the input master data frame.
+is flat added to the input master data frame.
 }
 \description{
 Determine whether each curve in a data frame is flat.

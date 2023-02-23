@@ -1,24 +1,26 @@
-#'	@title Make_cutoff_plots
+#' @title Make_cutoff_plots
 #'
-#'	@description Plot growth curves of controls and add vertical lines indicating
-#'		end of lag exponential phases calculated with `Adjust_OD()` and `Calculate_lag`.
-#'		Growth curves are faceted by `RRPP`, an identifier for Run and Plate
-#'		(e.g `110` corresponds to Run `1 `and plate `10`). Each facet in shows the curves
-#'		corresponding to the controls of a particular plate.
+#' @description Plot growth curves of controls and add vertical lines indicating
+#' end of lag exponential phases calculated with `Adjust_OD()` and `Calculate_lag`.
+#' Growth curves are faceted by `RRPP`, an identifier for Run and Plate
+#' (e.g `110` corresponds to Run `1 `and plate `10`). Each facet in shows the curves
+#' corresponding to the controls of a particular plate.
 #'
-#'	@param curves_df Master data frame containing raw OD measurements and
-#'		Runs and Layout data.
-#'	@param save_plots Should plots saved as files?
-#'	@param plots_dir Path to folder where plots will be saved.
-#'	@param vline Vertical line to be added to the plots.
-#'		One of "cutoff" (Default): end of exponential phase, "lag": end of lag
-#'		phase, or "both".
+#' @param curves_df Master data frame containing raw OD measurements and
+#' Runs and Layout data.
+#' @param save_plots Should plots saved as files?
+#' @param plots_dir Path to folder where plots will be saved.
+#' @param vline Vertical line to be added to the plots.
+#' One of "cutoff" (Default): end of exponential phase, "lag": end of lag
+#' phase, or "both".
+#' @param scales Should scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y")?
+#' @param plot_name Name of file to be written
 #'
-#'	@return A single ggplot2 plot of raw OD over time of control curves, faceted
-#'		by `RRPP` (Run and Plate identifier) with vertical lines indicating end
-#'		of lag or exponential phases.
-#'	@seealso [Adjust_OD()] and [Calculate_lag] for calculation of end of lag and exponential phases.
-#'	@export
+#' @return A single ggplot2 plot of raw OD over time of control curves, faceted
+#' by `RRPP` (Run and Plate identifier) with vertical lines indicating end
+#' of lag or exponential phases.
+#' @seealso [Adjust_OD()] and [Calculate_lag] for calculation of end of lag and exponential phases.
+#' @export
 Make_cutoff_plots = function(curves_df, save_plots = FALSE,
                              plots_dir = NA, vline = "cutoff",
                              scales = "fixed", plot_name = "Control_cutoff"){

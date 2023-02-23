@@ -1,22 +1,19 @@
-#'	 @title Adjust_OD
-#'
-#'	 @description Baseline-adjust raw OD measurements by subtracting
-#'	 the median OD of the controls at time 0 in a given plate from of all other
-#'	 measurements and determine the time of transition from exponential to
-#'	 stationary phase of the growth curve.
-#'
-#'	 @param curves_df Master data frame containing raw OD measurements and
-#'		Runs and Layout data.
-#'	 @param control_factor Name of column in master data frame containing
-#'		treatment information.
-#'	 @param control_level Label of the control treatment.
-#'		(e.g. "control", "DMSO", "water")
-#'	 @param offset_control Scaling factor used to account for small increases in
-#'	  OD during stationary phase.
-#'
-#'	 @return A data frame object that adds base-line adjusted OD and cut-off times
-#'		to the input master data frame.
-#'	 @export
+#' @title Adjust_OD
+#' @description Baseline-adjust raw OD measurements by subtracting
+#' the median OD of the controls at time 0 in a given plate from of all other
+#' measurements and determine the time of transition from exponential to
+#' stationary phase of the growth curve.
+#' @param curves_df Master data frame containing raw OD measurements and
+#' Runs and Layout data.
+#' @param control_factor Name of column in master data frame containing
+#' treatment information.
+#' @param control_level Label of the control treatment.
+#' (e.g. "control", "DMSO", "water").
+#' @param offset_control Scaling factor used to account for small increases in
+#' OD during stationary phase.
+#' @return A data frame object that adds base-line adjusted OD and cut-off times
+#' to the input master data frame.
+#' @export
 Adjust_OD = function(curves_df, control_factor, control_level, offset_control){
 
   ## NOTE

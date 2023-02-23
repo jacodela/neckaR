@@ -15,7 +15,7 @@ OD during stationary phase.}
 }
 \value{
 A data frame object that adds end of lag phase time to the input
- master data frame.
+master data frame.
 }
 \description{
 Determine the time of transition from lag phase to

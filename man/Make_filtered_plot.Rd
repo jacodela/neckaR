@@ -23,8 +23,8 @@ curve was marked as abnormal.}
 }
 \value{
 A list of ggplot2 plots of OD over time. Each plot contains all the
-	curves from a given run-plate-strain-biological replicate combination, with
-	curves marked as abnormal highlighted.
+curves from a given run-plate-strain-biological replicate combination, with
+curves marked as abnormal highlighted.
 }
 \description{
 Plot all technical replicates from the same run-plate-strain-biological replicate combination

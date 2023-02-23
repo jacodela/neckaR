@@ -15,15 +15,15 @@ how sensitive the spike detection is.}
 }
 \value{
 A data frame object that a variable marking whether a point is a potential
-	spike
+spike
 }
 \description{
 Identify whether an OD measurement is an spike, that is,
-	an unexpected increase that is seen only once in the early time points.
-	Here, a potential spiked is called when ODc0 is higher than the OD of the
-	point corresponding to the end of lag phase. Optionally, an offset can be
-	added to the lag OD value to modify how sensitive the detection is.
-	The higher the offset value, the less sensitive the detection of spikes
+an unexpected increase that is seen only once in the early time points.
+Here, a potential spiked is called when ODc0 is higher than the OD of the
+point corresponding to the end of lag phase. Optionally, an offset can be
+added to the lag OD value to modify how sensitive the detection is.
+The higher the offset value, the less sensitive the detection of spikes
 }
 \seealso{
 [Mark_artefacts()] for other method of spike detection.

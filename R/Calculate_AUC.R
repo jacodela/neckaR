@@ -1,16 +1,13 @@
-#'	 @title Calculate_AUC_single
-#'
-#'	 @description Calculate area under the curve (AUC) of a single growth curve
-#'		using the trapezoidal method. The curve is broken down into a series of
-#'		rectangles of height equal to the mean OD of two adjacent measurements
-#'		and width equal to the time difference between such measurements.
-#'		The sum of the area of the rectangles is the AUC.
-#'
-#'	 @param OD Vector with optical density measurements over time
-#'	 @param Time Time values corresponding to the OD measurements
-#'
-#'	 @return Numeric value of AUC
-#'	 @export
+#' @title Calculate_AUC_single
+#' @description Calculate area under the curve (AUC) of a single growth curve
+#' using the trapezoidal method. The curve is broken down into a series of
+#' rectangles of height equal to the mean OD of two adjacent measurements
+#' and width equal to the time difference between such measurements.
+#' The sum of the area of the rectangles is the AUC.
+#' @param OD Vector with optical density measurements over time
+#' @param Time Time values corresponding to the OD measurements
+#' @return Numeric value of AUC
+#' @export
 Calculate_AUC_single <- function(OD, Time) {
   ## Number of measurements
   N <- length(OD)
@@ -27,36 +24,31 @@ Calculate_AUC_single <- function(OD, Time) {
   sum( (OD[s1] + OD[s2])/2 * (Time[s2]-Time[s1]) )
 }
 
-#'	@title Calculate_AUC
+#' @title Calculate_AUC
+#' @description Calculate normalized area under the curve (AUC) of a series of
+#' growth curves after re-calculating optical density (OD) values by either
+#' shifting or shifting and readjusting.
+#' Before the AUC is calculated the OD values must be adjusted because
+#' even though the median starting ODs of controls are set to 0, values of
+#' individual wells may deviate from this. The `Calculate_AUC()` function uses
+#' two methods:
 #'
-#'	@description Calculate normalized area under the curve (AUC) of a series of
-#'		growth curves after re-calculating optical density (OD) values by either
-#'		shifting or shifting and readjusting.
-#'
-#'		Before the AUC is calculated the OD values must be adjusted because
-#'		even though the median starting ODs of controls are set to 0, values of
-#'		individual wells may deviate from this. The `Calculate_AUC()` function uses
-#'		two methods:
-#'
-#'		The first method assumes that curves are shifted by a constant across all points,
-#'		therefore the minimum OD of the curve is subtracted from each point. This causes
-#'		the minimum value to become zero. The second method assumes that the magnitude of
-#'		the shift of earlier time points is larger than that of later points, therefore
-#'		all values are first shifted by the minimum OD of the curve and then re-scaled so
-#'		that OD values that already had a value of 1 remain as such after the correction.
-#'
-#'		Using both OD values are used to calculate AUCs, which are then normalized to the
-#'		median AUC of control wells of a given plate and run. Finally, the AUC closest to
-#'		1 is selected.
-#'
-#'	@param curves_df Data frame containing adjusted OD measurements after marking and
-#'		filtering abnormal growth curves
-#'
-#'	@return A data frame object that contains, for each curve, the normalized AUC
-#'		value selected, as well as raw and re-calculated OD values, detected abnormalities,
-#'		run, plate, replicate and other curve data.
-#'	@export
-Calculate_AUC = function(curves_df, ...){
+#' The first method assumes that curves are shifted by a constant across all points,
+#' therefore the minimum OD of the curve is subtracted from each point. This causes
+#' the minimum value to become zero. The second method assumes that the magnitude of
+#' the shift of earlier time points is larger than that of later points, therefore
+#' all values are first shifted by the minimum OD of the curve and then re-scaled so
+#' that OD values that already had a value of 1 remain as such after the correction.
+#' Using both OD values are used to calculate AUCs, which are then normalized to the
+#' median AUC of control wells of a given plate and run. Finally, the AUC closest to
+#' 1 is selected.
+#' @param curves_df Data frame containing adjusted OD measurements after marking and
+#' filtering abnormal growth curves
+#' @return A data frame object that contains, for each curve, the normalized AUC
+#' value selected, as well as raw and re-calculated OD values, detected abnormalities,
+#' run, plate, replicate and other curve data.
+#' @export
+Calculate_AUC = function(curves_df){
 
   ## Recalculate ODc01 after cut-off
   blanked_df = curves_df %>%

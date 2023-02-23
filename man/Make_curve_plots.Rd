@@ -23,7 +23,7 @@ Runs and Layout data.}
 }
 \value{
 A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biological
-	replicate combination.
+replicate combination.
 }
 \description{
 Plot all technical replicates from the same run-plate-strain-biological replicate combination

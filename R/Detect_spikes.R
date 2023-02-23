@@ -1,23 +1,23 @@
-#'	@title Detect_spikes
+#' @title Detect_spikes
 #'
-#'	@description Identify whether an OD measurement is an spike, that is,
-#'		an unexpected increase that is seen only once in the early time points.
-#'		Here, a potential spiked is called when ODc0 is higher than the OD of the
-#'		point corresponding to the end of lag phase. Optionally, an offset can be
-#'		added to the lag OD value to modify how sensitive the detection is.
-#'		The higher the offset value, the less sensitive the detection of spikes
+#' @description Identify whether an OD measurement is an spike, that is,
+#' an unexpected increase that is seen only once in the early time points.
+#' Here, a potential spiked is called when ODc0 is higher than the OD of the
+#' point corresponding to the end of lag phase. Optionally, an offset can be
+#' added to the lag OD value to modify how sensitive the detection is.
+#' The higher the offset value, the less sensitive the detection of spikes
 #'
-#'	@param curves_df Master data frame containing adjusted OD measurements, cut-off
-#'		values and Runs and Layout data. Note that the end of lag phase time should be included.
-#'	@param offset_control Value added to the OD of end of lag phase to adjust
-#'		how sensitive the spike detection is.
+#' @param curves_df Master data frame containing adjusted OD measurements, cut-off
+#' values and Runs and Layout data. Note that the end of lag phase time should be included.
+#' @param offset_control Value added to the OD of end of lag phase to adjust
+#' how sensitive the spike detection is.
 #'
-#'	@return A data frame object that a variable marking whether a point is a potential
-#'		spike
+#' @return A data frame object that a variable marking whether a point is a potential
+#' spike
 #'
-#'	@seealso [Mark_artefacts()] for other method of spike detection.
+#' @seealso [Mark_artefacts()] for other method of spike detection.
 #'
-#'	@export
+#' @export
 Detect_spikes = function(curves_df, offset_control = 0){
 
   ## Create data frame with the ODc0 values of t0 and lag time of each curve

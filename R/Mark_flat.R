@@ -1,19 +1,19 @@
-#'	@title Mark_flat_single
+#' @title Mark_flat_single
 #'
-#'	@description Determine whether a single growth curve is flat
+#' @description Determine whether a single growth curve is flat
 #'
-#'	@param curves_df Master data frame containing adjusted OD measurements and
-#'		Runs and Layout data.
-#'	@param OD_col Name of column in master data frame containing
-#'		OD measurements. Can be raw or adjusted OD.
-#'	@param OD_diff_cutoff Average difference between each of four break points in the
-#'		growth curve and and the first measurement. If this value is  below a user-defined
-#'		threshold, the curve will be flagged as flat. Smaller values make the marking
-#'		more strict.
-#'	@param last_OD Minimum OD value that a curve should reach in last measurement
-#'		so that the 'flat' label is removed. Smaller values make the marking more strict.
+#' @param curves_df Master data frame containing adjusted OD measurements and
+#' Runs and Layout data.
+#' @param OD_col Name of column in master data frame containing
+#' OD measurements. Can be raw or adjusted OD.
+#' @param OD_diff_cutoff Average difference between each of four break points in the
+#' growth curve and and the first measurement. If this value is  below a user-defined
+#' threshold, the curve will be flagged as flat. Smaller values make the marking
+#' more strict.
+#' @param last_OD Minimum OD value that a curve should reach in last measurement
+#' so that the 'flat' label is removed. Smaller values make the marking more strict.
 #'
-#'	@return A logical value of whether a curve is considered flat or not.
+#' @return A logical value of whether a curve is considered flat or not.
 Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 
 	# Select positions corresponding to
@@ -51,23 +51,25 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 
 }
 
-#'	@title Mark_flat
+#' @title Mark_flat
 #'
-#'	@description Determine whether each curve in a data frame is flat.
+#' @description Determine whether each curve in a data frame is flat.
 #'
-#'	@param curves_df Master data frame containing adjusted OD measurements and
-#'		Runs and Layout data.
-#'	@param OD_col Name of column in master data frame containing
-#'		OD measurements. Can be raw or adjusted OD.
-#'	@param OD_diff_cutoff Average difference between each of four break points in the
-#'		growth curve and and the first measurement. If this value is  below a user-defined
-#'		threshold, the curve will be flagged as flat. Smaller values make the marking
-#'		more strict.
-#'	@param last_OD Minimum OD value that a curve should reach in last measurement
-#'		so that the 'flat' label is removed. Smaller values make the marking more strict.
+#' @param curves_df Master data frame containing adjusted OD measurements and
+#' Runs and Layout data.
+#' @param OD_col Name of column in master data frame containing
+#' OD measurements. Can be raw or adjusted OD.
+#' @param OD_diff_cutoff Average difference between each of four break points in the
+#' growth curve and and the first measurement. If this value is  below a user-defined
+#' threshold, the curve will be flagged as flat. Smaller values make the marking
+#' more strict.
+#' @param group_var Name of variable to be used for grouping before checking if curve is flat.
+#' @param last_OD Minimum OD value that a curve should reach in last measurement
+#' so that the 'flat' label is removed. Smaller values make the marking more strict.
 #'
-#'	@return A data frame object with the result of the test of whether the curve
-#'		is flat added to the input master data frame.
+#' @return A data frame object with the result of the test of whether the curve
+#' is flat added to the input master data frame.
+#' @export
 Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, group_var = "RRPPRCC", last_OD = 1) {
 	curves_df %>%
 		dplyr::group_split(!!rlang::sym(group_var)) %>%

@@ -4,18 +4,17 @@
 \alias{Fix_cutoff}
 \title{Fix_cutoff}
 \usage{
-Fix_cutoff(df, RRPPs_cutoff, fix_lag = FALSE)
+Fix_cutoff(curves_df, RRPPs_cutoff)
 }
 \arguments{
 \item{curves_df}{Master data frame containing adjusted OD measurements, cut-off
 values and Runs and Layout data. Note that the end of lag phase time should be included.}
 
-\item{offset_control}{Value added to the OD of end of lag phase to adjust
-how sensitive the spike detection is.}
+\item{RRPPs_cutoff}{A list of vectors with pairs of values corresponding to the `RRPP` to change and
+the new `cutoff_time`.}
 }
 \value{
-A data frame object that a variable marking whether a point is a potential
-	spike
+A data frame object with fixed cut off values at the runs/plates specified
 }
 \description{
 Manually replace end of lag or exponential phase cut-off values
@@ -23,6 +22,5 @@ Manually replace end of lag or exponential phase cut-off values
 }
 \seealso{
 [Adjust_OD()] and [Calculate_lag()] for determination of end of
-	lag and exponential phases
-  @export
+lag and exponential phases
 }

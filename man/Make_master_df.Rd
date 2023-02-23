@@ -30,17 +30,17 @@ Layout tables}
 }
 \value{
 A data frame object that contains the OD measurements from a
-	all the plates from all runs included, combined with the Runs and Layout
-	information. Columns correspond to those included in Runs and Layout tables.
-	In addition, `Make_master_df()` creates a series of variables to identify
-	each curve and each measurement. They are:
-	* `ID`: numeric value where the thousands and tens of thousands positions
-	correspond to the plate number [1 to # of plates]. Hundreds position is
-	the row number [1 to 8]. Tens and units are the columns [01 to 12].
-	* `RRPPRCC`: Unique curve identifier, representing
-	(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
+all the plates from all runs included, combined with the Runs and Layout
+information. Columns correspond to those included in Runs and Layout tables.
+In addition, `Make_master_df()` creates a series of variables to identify
+each curve and each measurement. They are:
+* `ID`: numeric value where the thousands and tens of thousands positions
+correspond to the plate number [1 to # of plates]. Hundreds position is
+the row number [1 to 8]. Tens and units are the columns [01 to 12].
+* `RRPPRCC`: Unique curve identifier, representing
+(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
 }
 \description{
 Combines OD measurements with with run and layout information
-	of an experiment
+of an experiment
 }

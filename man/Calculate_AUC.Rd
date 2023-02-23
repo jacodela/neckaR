@@ -4,7 +4,7 @@
 \alias{Calculate_AUC}
 \title{Calculate_AUC}
 \usage{
-Calculate_AUC(curves_df, ...)
+Calculate_AUC(curves_df)
 }
 \arguments{
 \item{curves_df}{Data frame containing adjusted OD measurements after marking and
@@ -12,27 +12,25 @@ filtering abnormal growth curves}
 }
 \value{
 A data frame object that contains, for each curve, the normalized AUC
-	value selected, as well as raw and re-calculated OD values, detected abnormalities,
-	run, plate, replicate and other curve data.
+value selected, as well as raw and re-calculated OD values, detected abnormalities,
+run, plate, replicate and other curve data.
 }
 \description{
 Calculate normalized area under the curve (AUC) of a series of
-	growth curves after re-calculating optical density (OD) values by either
-	shifting or shifting and readjusting.
+growth curves after re-calculating optical density (OD) values by either
+shifting or shifting and readjusting.
+Before the AUC is calculated the OD values must be adjusted because
+even though the median starting ODs of controls are set to 0, values of
+individual wells may deviate from this. The `Calculate_AUC()` function uses
+two methods:
 
-	Before the AUC is calculated the OD values must be adjusted because
-	even though the median starting ODs of controls are set to 0, values of
-	individual wells may deviate from this. The `Calculate_AUC()` function uses
-	two methods:
-
-	The first method assumes that curves are shifted by a constant across all points,
-	therefore the minimum OD of the curve is subtracted from each point. This causes
-	the minimum value to become zero. The second method assumes that the magnitude of
-	the shift of earlier time points is larger than that of later points, therefore
-	all values are first shifted by the minimum OD of the curve and then re-scaled so
-	that OD values that already had a value of 1 remain as such after the correction.
-
-	Using both OD values are used to calculate AUCs, which are then normalized to the
-	median AUC of control wells of a given plate and run. Finally, the AUC closest to
-	1 is selected.
+The first method assumes that curves are shifted by a constant across all points,
+therefore the minimum OD of the curve is subtracted from each point. This causes
+the minimum value to become zero. The second method assumes that the magnitude of
+the shift of earlier time points is larger than that of later points, therefore
+all values are first shifted by the minimum OD of the curve and then re-scaled so
+that OD values that already had a value of 1 remain as such after the correction.
+Using both OD values are used to calculate AUCs, which are then normalized to the
+median AUC of control wells of a given plate and run. Finally, the AUC closest to
+1 is selected.
 }

@@ -11,7 +11,6 @@ Fix_table_names(col_names)
 }
 \value{
 A vector of same length as `col_names` with repaired names
-  @export
 }
 \description{
 Fix column names in Runs and Layout tables. All column names start
