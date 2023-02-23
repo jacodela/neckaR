@@ -3,6 +3,7 @@
 
 ## usethis namespace: start
 #' @importFrom ggplot2 aes
+#' @importFrom rlang .data
 #' @importFrom stats fivenum
 #' @importFrom stats median
 #' @importFrom stats pexp

@@ -15,7 +15,7 @@ used by the Maier Lab at the University of Tübingen, Germany.
 
 ## Citation
 
-If you use `neckaR`, please cite \> \[Citation needed\]
+If you use `neckaR`, please cite \> Citation needed
 
 The functions contained in `neckaR` are based on the code used in the
 paper:
@@ -40,7 +40,7 @@ You can check out the introductory vignette for a quick start tutorial
 by typing:
 
 ``` r
-vignette("Bacterial_Curve_Analysis",  package="neckaR")
+vignette("Bacterial_Curve_Analysis", package="neckaR")
 ```
 
 For a comprehensive list of functions, you can explore the reference
@@ -53,7 +53,7 @@ help(package="neckaR")
 ## Help & Contributing
 
 If you have questions or come across a bug, you can [create a new issue
-in](https://github.com/jacodela/neckaR/issues).
+here](https://github.com/jacodela/neckaR/issues).
 
 ## Why neckaR?
 

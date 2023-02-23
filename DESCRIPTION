@@ -1,7 +1,7 @@
 Package: neckaR
 Type: Package
 Title: Analysis Of Bacterial Growth Curves
-Version: 0.0.1
+Version: 0.0.0.1000
 Authors@R: c(person("Jacobo", "de la Cuesta-Zuluaga", email = "jacobo.delacuesta@med.uni-tuebingen.de", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-7369-992X")),
 						person("Patrick", "Müller", email = "patrick.mueller@med.uni-tuebingen.de", role = c("aut")),
 						person("Lisa", "Maier", email = "l.maier@uni-tuebingen.de", role = c("aut", "fnd"), comment = c(ORCID = "0000-0002-6473-4762")))
@@ -32,7 +32,9 @@ Suggests:
     anomalize,
     broom,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyverse,
+    conflicted
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
