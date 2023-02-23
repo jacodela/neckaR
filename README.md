@@ -1,12 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# neckaR
+# neckaR <a href='https://lisamaierlab.com/'><img src='man/figures/neckaR.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of neckaR is to …
+The `neckaR` package is a collection of functions for the analysis of
+bacterial growth curves. The functions included in the package assist in
+the loading of files with optical density readings and experimental
+design, the quality control of the curves and the calculation of indices
+such as the area under the curve and the maximum OD value. Created and
+used by the Maier Lab at the University of Tübingen, Germany.
+
+## Citation
+
+If you use `neckaR`, please cite \> \[Citation needed\]
+
+The functions contained in `neckaR` are based on the code used in the
+paper:
+
+> Maier, L., Pruteanu, M., Kuhn, M. et al.  Extensive impact of
+> non-antibiotic drugs on human gut bacteria. Nature 555, 623–628
+> (2018). <https://doi.org/10.1038/nature25979>
 
 ## Installation
 
@@ -18,38 +34,34 @@ You can install the development version of neckaR from
 devtools::install_github("jacodela/neckaR")
 ```
 
-## Example
+## Usage
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-# library(neckaR)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+You can check out the introductory vignette for a quick start tutorial
+by typing:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+vignette("Bacterial_Curve_Analysis",  package="neckaR")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+For a comprehensive list of functions, you can explore the reference
+documentation:
 
-You can also embed plots, for example:
+``` r
+help(package="neckaR")
+```
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+## Help & Contributing
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+If you have questions or come across a bug, you can [create a new issue
+in](https://github.com/jacodela/neckaR/issues).
+
+## Why neckaR?
+
+[The Neckar](https://en.wikipedia.org/wiki/Neckar) is a river that flows
+through the state of Baden-Württemberg, in the southwest of Germany. On
+the banks of the river Neckar lie the cities of Heidelberg and Tübingen,
+where this package has been developed. First in the laboratory of Nassos
+Typas at EMBL and now in the laboratory of Lisa Maier at the University
+of Tübingen. It is impossible not to compare the meandering of the river
+with the bacterial growth curves. Although to be perfectly honest, the
+word ends with an R and we had to take advantage of that.

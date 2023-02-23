@@ -1,0 +1,551 @@
+---
+title: "Introduction to the neckaR package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the neckaR package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Aim
+Jacobo de la Cuesta-Zuluaga. January 2023.
+
+This notebook is a broad introduction to the `neckaR` package of R for the analysis
+of bacterial growth curves. In addition, it also accompanies the article *TBD* by
+Fulano et al. (202X).
+
+# Introduction to the data and the analysis
+
+The data used in this example comes from the paper "Extensive impact of 
+non-antibiotic drugs on human gut bacteria" by Maier et al, (2018). In this work, 
+the authors assessed the effect of a panel of 1197 FDA-approved compounds over a
+set of 40 bacterial isolates that broadly represent the human gut microbiota.
+
+In particular, we will use data corresponding to a single bacterial isolate: 
+*Bacteroides ovatus*. The analysis will cover the main steps used to measure
+bacterial growth by optical density (OD) and the effect of different treatments
+over it. Namely, loading OD measurements from the output of the plate reader,
+the construction of a master table that includes experimental design information,
+quality control of the growth curves and the calculation of parameters such as
+area under the curve (AUC) or maximum OD for each of the individual curves.
+
+# Libraries
+
+The present example makes heavy use of packages from the `tidyverse`. The
+`conflicted` package is also used to solve possible conflicts in function 
+assignations; this is not mandatory but it is recommended. In addition,
+we will use the `readxl` both to read user-made tables and under the hood, as 
+well as the `fitdistrplus` package for quality control of the curves.
+Make sure these packages are installed. 
+
+```{r}
+library(tidyverse)
+library(conflicted)
+```
+
+```{r}
+# Solve conflicts
+conflict_prefer("filter", "dplyr")
+```
+
+# Load data and functions
+```{r}
+# Set work dir and load example data
+base_dir = "/home/jacobo/Documents/Projects/Curves/neckaR"
+
+# R functions
+# list.files(file.path(base_dir, "R"), pattern = "*.R", full.names = TRUE) %>% 
+#   walk(function(x) source(x))
+devtools::load_all(path = "/home/jacobo/Documents/Projects/Curves/neckaR/")
+```
+
+## Build master data frame
+First, we will create the master data frame. For this we will need to combine data
+distributed across multiple tables that should be created beforehand.
+
+* **Runs** table, also known as `Tab1` contains information about the runs that
+  make up the complete experiment: which microbial species are grown on which 
+  plates; how many experimental runs are performed in the case of multiple 
+  replicates or batches; and any other variable that helps to link this 
+  information to the exact layout of the plates. 
+  
+* **Layout** table, also known as `Tab2` has information on the distribution of 
+  treatments across the plates and the position of each treatment within its 
+  respective plate. The position, that is, the plate well, should be given as a numeric
+  variable. Hundreds correspond to the row (1 to 8 instead of A to H) and tens and
+  units correspond to the column (01 to 12). For example, position `211` is well `B11`.
+  
+* **Raw measurements** that come straight out of the plate reader. Usually in 
+  Microsoft Excel files.
+  
+  We can specify the location of the files.
+
+```{r}
+# List file locations
+data_dir = file.path(base_dir, "inst/extdata/")
+
+# List raw plate reader files
+Raw_Data_files = list.files(data_dir, pattern = "RUN")
+
+# Tab1
+Runs = file.path(data_dir, "Tab1.xlsx")
+
+# Tab2
+Layout = file.path(data_dir, "Tab2.xlsx")
+```
+
+This is how the `Runs` and `Layout` table should look like
+```{r}
+# Runs table example
+file.path(data_dir, "Tab1.xlsx") %>% 
+	readxl::read_xlsx() %>% 
+	head()
+
+# Layout table example
+file.path(data_dir, "Tab2.xlsx") %>% 
+	readxl::read_xlsx() %>% 
+	head()
+```
+
+
+
+```{r}
+# Output dirs
+fig_dir = file.path(base_dir, "example/figures") 
+tab_dir = file.path(base_dir, "example/tables") 
+
+# Create dirs
+dir.create(fig_dir, recursive = TRUE)
+dir.create(tab_dir, recursive = TRUE)
+```
+
+The `Make_master_df` function takes as input the folder with the raw data, the 
+name of the raw data files and the `Runs` and `Layout` data frames. Make sure you 
+specify the name of the design column from the `Runs` file.
+
+```{r}
+# Create master data frame
+master_df = Make_master_df(Data_folder = data_dir, 
+               Data_files = Raw_Data_files, 
+               Runs_path = Runs, 
+               Layout_path = Layout, 
+               Design_tab_col = "Design")
+
+```
+
+The output of the `Make_master_df` function is a table in long format, where each
+of the rows corresponds to a single measurement from the plate reader. It looks
+something like this
+
+```{r}
+master_df %>% 
+  head()
+```
+
+Where:
+* `OD`: optical density as measured by the plate reader,
+* `Time`: time point where OD was measured,
+* `Position`: numeric value of the well on the plate,
+* `Run`: the batch or number of the set of plates performed together,
+* `Plate`: the plate ID number,
+* `Strain`: name of the species or strain grown; in this case it is the lab ID for 
+  *Bacteroides ovatus*,
+* `Replicate`: the biological replicate of the experiment,
+* `Drug`: ID of the compound tested, in this case from the Prestwick library.
+* `Drug_name`: common name of the compound.
+
+Recall that these fields come from the `Run` and `Layout` table. In addition, 
+`Make_master_df` creates a series of variables to identify each curve and each
+measurement. They are:
+* `ID`: For the well ID, we will use a numeric value where the thousands and tens
+  of thousands positions correspond to the plate number [1 to # of plates].
+  Hundreds position is the row number [1 to 8]. Tens and units are the columns [01 to 12].
+* `RRPPRCC`: Unique curve identifier, representing
+  (Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
+
+# Plot raw curves
+For a first inspection of the data, we can plot the raw curves. We can use the
+`Make_curve_plots` function. It takes as input the `master_df` we created above. 
+
+Optionally, it can save the plots as `pdf` files in an output folder specified 
+by the user. **Don't forget** to create the folder before trying to save the plots.
+Otherwise, the function will fail.
+
+Likewise, this (among other functions) provide the option of adding a replicate
+variable to be used for grouping, plotting and labeling. You can specify it by
+including the name of the column in the `replicate_vaiable` parameter.
+```{r}
+# Plot raw curves
+Master_plots = Make_curve_plots(master_df, 
+                                save_plots = TRUE,
+                                plots_dir = fig_dir, 
+                                replicate_variable = "Replicate")
+
+# Show just the first 3 graphs
+Master_plots[1:3]
+```
+
+# Adjust ODs
+Next, we will baseline-adjust the OD. For this, the median OD of the controls at
+time 0 is subtracted of all other measurements. This value is stored in the column
+`ODc0` in the output data frame.
+
+Then, we determine the time of transition from exponential to stationary phase,
+that is, the point where the growth stabilizes. This point will serve as a 
+cut-off from downstream analyses. It is calculated as the time point where the 
+control treatments within a given run and plate reach maximum OD.
+
+Both steps are performed by the `Adjust_OD` function. The name of the variable
+(e.g. medication, sugar) with the growth condition or treatment should be 
+specified with the the `control_factor` parameter. To specify the name of the 
+name of the control used (e.g. DMSO) use the `control_level` parameter.
+
+It is also possible to determine the time where the lag phase ends. For this, we 
+use the `Calculate_lag` function. **Note** that `Calculate_lag` can be piped after
+the `Adjust_OD` function.
+
+To calculate the cut-off of stationary and lag phases, a scaling factor is used to
+account for small increases in OD during the said phases. This can be adjusted by
+the `offset_control`parameter. In the present example, we will use a value of 0.02.
+
+```{r}
+# Test
+adjusted_df = Adjust_OD(curves_df = master_df, 
+                        control_factor = "Drug", 
+                        control_level = "control", 
+                        offset_control = 0.02) %>% 
+  Calculate_lag(offset_control = 0.02)
+
+# Print head
+adjusted_df %>% 
+  head()
+```
+
+## Plot cutoff values
+
+To inspect the cut-off times, the `Make_cutoff_plots` function can be used. The 
+output plot is faceted by `RRPP`, an identifier for Run and Plate (e.g `110` 
+corresponds to Run `1 `and plate `10`). Each facet in shows the curves 
+corresponding to the controls of a particular plate; the vertical line shows the
+cut-off time identified by the `Adjust_OD` function.
+
+Just like the other plotting functions of this package, the plots can be saved
+as `pdf` in an specified directory.
+```{r}
+cutoff_plot = Make_cutoff_plots(curves_df = adjusted_df, 
+                  save_plots = TRUE,  
+                  plots_dir = fig_dir, 
+                  vline = "cutoff")
+
+cutoff_plot
+```
+
+## Adjust cut off values
+We can manually check which Run/Plate combinations have a cut-off time below 
+(or above) a certain value:
+```{r}
+# Cut-off values of 12 or less
+adjusted_df %>% 
+  filter(Control== TRUE, cutoff_time <= 12) %>% 
+  count(RRPP) %>% 
+  select(-n)
+```
+
+After visually inspecting the plots, we could change some of the cut-off values
+manually in case the automatic method failed. For this, we can use the `Fix_cutoff`
+function. The input of this function is the adjusted data frame and a list
+of vectors. The list of vectors are pairs of values corresponding to the `RRPP`
+we would want to change and the new `cutoff_time`.
+
+For example, we could change the times of `RRPP` 306 from 13 to 11 h.
+```{r}
+# Create list
+replace_values = list(c(306, 11))
+
+# replace values
+readjusted_df = Fix_cutoff(adjusted_df, replace_values)
+
+readjusted_df %>% 
+  filter(RRPP == 306)
+```
+
+For the sake of this example, we will not use manually changed values, so
+we will use the `adjusted_df` for the following step.
+
+## Plot curves up to cut-off times
+
+After identifying (and optionally adjusting) the cut-off values, we can re-make
+the last plot as follows
+
+```{r}
+# cut all curves at the cut-off
+# Note that this is used only for plotting
+cutoff_df = adjusted_df %>% 
+  filter(Time < (cutoff_time + 0.5)) %>%
+  arrange(Time)
+
+# Plot
+cutoff_df %>% 
+  filter(Control == TRUE) %>% 
+  Make_cutoff_plots(save_plots = TRUE,  
+                    plots_dir = fig_dir, 
+                    plot_name = "Truncated_control_cutoff")
+```
+
+# Growth curve quality control
+
+Once the OD has been baseline-adjusted and the cut-off has been determined, we
+can do a quality check of the curves and remove those might be of bad quality.
+
+## Mark artefacts
+
+The `Mark_artefacts` function helps to single out growth curves that have unexpected
+behaviors. It does this by identifying multiple possible abnormalities.
+
+Before identifying faulty curves, the function truncates curves at the time of 
+transition from exponential to stationary phase. Then, it calculates a normalized
+OD, which we call `ODc01`. This normalized OD ranges from 0 to 1, where values 
+represent the median growth of the controls at time 0 and the the start of 
+stationary phase, in other words, they are the minimum and maximum observed
+ODs of controls in the plate. 
+
+Then, for each curve, the following possible abnormalities are evaluated:
+
+* **High staring OD**: The mean and SD values of `ODc01` of control curves at
+  time 0 are calculated. The OD at time 0 of each curve is compared to the mean
+  of the controls and those that are above a certain number of standard
+  deviations (`t0_sd`) will be flagged as abnormal. The value of the SD threshold 
+  can be specified by the user. Lower `t0_sd` values make the filtering more strict.
+  
+* **Spike measurements**: certain curves may have an abnormally increased OD in
+  the earlier time points that then go down. However, we assume that OD values are
+  increasing in time (or at least not decreasing). To detect these points, the
+  function determines whether the OD at a given time is greater that the minimum 
+  OD in the remaining section of the curve, plus an offset value which corresponds 
+  to n times the SD of controls at time 0 (`increased_sd`). Then the number of 
+  spikes is added up and curves with a number above a certain threshold (`sum_inc`)
+  are marked as abnormal. Smaller `increased_sd` and `sum_inc` values make the 
+  filtering more strict.
+
+* **Distribution of deltas**: the difference between two consecutive measurements 
+  (*delta*) and two consecutive deltas (*delta2*) is used to find abnormal curves.   
+  It assumes that that *delta* and *delta2* follow exponential distributions 
+  within a given strain. A parameter of the exponential distribution is obtained
+  and the the probability of observing a value that is equal to or greater than it
+  is calculated. A curve is marked as an abnormality if the smallest observed
+  *delta* and *delta2* have a probability below a threshold specified by the user.
+  The interpretation of this detection can be briefly explained as follows: 
+  for a given curve, if the minimum *delta* and *delta2* values have a high value
+  in comparison to the overall distribution within all curves from the strain, then
+  the probability of observing it will be low, therefore the curve will be marked as
+  an abnormality. The value of these thresholds can be changed according to how 
+  stringent we want to make the abnormality detection: smaller `p_delta` and 
+  `p_delta2` values make the filtering more lenient, higher values are more strict.
+
+```{r}
+# Run mark artefacts function
+marked_df = Mark_artefacts(adjusted_df,
+                           sum_inc = 3,
+                           increased_sd = 2,
+                           t0_sd = 3,
+                           p_delta = 1e-3,
+                           p_delta2 = 1e-3)
+```
+
+We can then plot the curves that were marked
+```{r}
+# Plot marked curves
+filtered_plots = Make_filtered_plot(marked_df,
+                   save_plots = FALSE,
+                   plots_dir = fig_dir,
+                   replicate_variable = "Replicate")
+
+filtered_plots[1:3]
+```
+
+
+## Overriding the default behavior of Mark_artefacts
+By default, `Mark_artefacts` considers a curve as abnormal if at least one 
+of the aforementioned tests is positive. However, the user might want to override
+this behavior and consider only some of the criteria. 
+
+This, for example, could be the case when otherwise normal-looking curves are
+marked as artefacts because they have a high initial OD. This might be due to the
+turbidity of the compound used as treatment.
+
+The output data frame of `Mark_artefacts` includes the result of each of the 
+evaluated abnormalities. Therefore, if we were to use only a subset of them to 
+mark artifact curves, we could rewrite the `discard_conc` column. For this, we 
+would do a mutate call with the factors we wish to include, as in the example
+that follows:
+
+```{r}
+# Rewrite discard_conc
+# Not consider abnormal_t0 abnormality
+alt_marked_df = marked_df %>% 
+	mutate(discard_conc = (is_increased | signif_delta | signif_delta2))
+
+alt_filtered_plots = Make_filtered_plot(alt_marked_df,
+																				save_plots = FALSE, 
+																				replicate_variable = "Replicate")
+
+alt_filtered_plots[1:3]
+```
+
+## Optional QC steps
+
+### Peak at the start
+A behavior we have observed with certain microbes is that there is a spike in the 
+OD measurements in the early time points, that is otherwise not observed in the
+rest of the curve. For example, the following curves:
+
+```{r}
+# Plot
+marked_df %>% 
+  filter(Control == TRUE, RRPP == 201) %>% 
+  Make_cutoff_plots(save_plots = FALSE, 
+                    vline = "lag")
+```
+
+We could decide to remove these curves, which would first require us to single
+out which measurements correspond to a spike. For this, we can use the `increased`
+column from the `marked_df`. It flags a point as an spike if the OD is greater than
+the smallest value of the remaining section of the curve plus a user-defined
+offset. The lower the offset, the more strict the detection.
+
+```{r}
+# Identify spikes
+spikes_df = adjusted_df %>% 
+  Mark_artefacts(increased_sd = 2)
+
+# Example of curve with peak at the start
+spikes_df %>% 
+  filter(RRPPRCC == 201307) %>% 
+  ggplot(aes(x = Time, y = ODc01, color = increased)) +
+  geom_point() +
+  theme_light()
+```
+
+Then, we could select curves that contain spikes and remove them.
+```{r}
+# Curves containing spikes
+discard_spikes = spikes_df %>% 
+  filter(increased == TRUE) %>% 
+  select(RRPPRCC) %>% 
+  distinct()
+
+# Remove from analysis
+adjusted_noSpike_df = spikes_df %>% 
+  filter(!(RRPPRCC %in% discard_spikes$RRPPRCC))
+
+```
+
+
+
+### Flat growth curves
+If desired, we could also remove curves where no growth was observed. In other
+words, curves that rather look like flat lines. For this, we can use the 
+`Mark_flat` function. 
+
+Curves are divided into four segments and the average difference between each of
+the break points and the first measurement is calculated. We would expect a flat
+line to have an average difference close to zero. Therefore, if this value is 
+below a user-defined threshold, the curve will be flagged as flat. 
+
+However, there are cases where late growth is observed. This would normally
+be flagged as a flat curve, but we might want to retain these curves. The 
+`last_OD parameter` allows the removal of the 'flat' label from a curve if the 
+last OD value is above a user-settable cut-off point. 
+In this example, we will use a value of 0.2. 
+
+As usual, we can tweak the `OD_diff_cutoff` according to our data set. Likewise,
+as with `Mark_artefacts`, this function adds a column to the table, no curves are
+discarded at this point. 
+
+```{r}
+# Run flat detection function
+marked_flat_df = Mark_flat(marked_df, OD_diff_cutoff = 0.2, last_OD = 0.2)
+
+# Print head
+marked_flat_df %>% 
+  head()
+```
+
+In addition, we can plot the the flat growth curves (here in orange) with the
+`Make_flat_plot` function
+```{r}
+
+flat_plots = Make_flat_plot(marked_flat_df, 
+														save_plots = TRUE,
+														plots_dir = fig_dir,
+														replicate_variable = "Replicate")
+
+flat_plots
+```
+
+# Calculate AUC
+Finally in this example, we will calculate the AUC for each of the curves.
+First up, though, we need to remove bad quality curves.
+```{r}
+filtered_marked_df = marked_df %>% 
+  filter(discard_conc == FALSE)
+```
+
+For each curve, the `Calculate_AUC` uses the trapezoidal rule. Briefly, the
+curve is broken down into a series of rectangles of height equal to the mean OD 
+of two adjacent measurements and width equal to the time difference between such
+measurements. The sum of the area of the rectangles is the AUC.
+
+Before the AUC is calculated, however, the OD values must be adjusted one last 
+time. This is because even though the median starting ODs are set to 0, values 
+of individual wells may deviate from this. To correct this and recalculate the 
+baseline of each of the curves, the `Calculate_AUC` function uses two methods:
+
+The first method assumes that curves are shifted by a constant across all points,
+therefore the minimum OD of the curve is subtracted from each point. This causes
+the minimum value to become zero. The second method assumes that the magnitude of
+the shift of earlier time points is larger than that of later points, therefore 
+all values are first shifted by the minimum OD of the curve and then re-scaled so 
+that OD values that already had a value of 1 remain as such after the correction.
+
+Using both OD values are used to calculate AUCs, which are then normalized to the
+median AUC of control wells of a given plate and run. Finally, the AUC closest to
+1 is selected.
+
+```{r}
+AUC_df = Calculate_AUC(filtered_marked_df)
+```
+
+
+# Export data
+One last thing. After calculating AUC, the resulting data frame contains
+all the information generated along the different steps. This can be useful for
+fine grained analyses, however, it can also be messy for downstream analyses; we
+are likely interested in some of the variables. Therefore, we can clean up the
+data frame as follows:
+
+```{r}
+# Create df with max OD and cut-off times of each curve
+Max_OD_df = filtered_marked_df %>% 
+	group_by(RRPPRCC) %>% 
+	slice(which.min(cutoff_time - Time)) %>% 
+	ungroup() %>% 
+	select(RRPPRCC, Drug, Drug_name, Replicate, Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
+
+# Select only normalized AUC
+selected_AUC_df = AUC_df %>% 
+	select(RRPPRCC, normAUC)
+
+# Combined df
+final_df = left_join(Max_OD_df, selected_AUC_df, by = "RRPPRCC")
+
+final_df %>% 
+	head()
+```
