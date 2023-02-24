@@ -6,7 +6,7 @@
 \alias{neckaR-package}
 \title{neckaR: Analysis Of Bacterial Growth Curves}
 \description{
-A package for the analysis of bacterial growth curves obtained from optical density (OD) measurements. The neckaR package aids in the identification of abnormal growth curves and the calculation of parameters such area under the curve (AUC), maximum OD, and end of lag and exponential phases.
+Preparation and analysis of bacterial growth curves obtained from optical density (OD) measurements. Functions in this package aid in the identification of abnormal growth curves and the calculation of parameters such area under the curve (AUC), maximum OD, and end of lag and exponential phases.
 }
 \seealso{
 Useful links:

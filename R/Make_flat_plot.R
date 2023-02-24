@@ -1,12 +1,24 @@
-Make_flat_plot = function(Master_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
+#' @title Make_flat_plot
+#' @description Plot all technical replicates from the same run-plate-strain-biological
+#' replicate combination and highlight those marked as flat.
+#' @param curves_df Master data frame containing OD measurements and whether a
+#' curve was marked as flat.
+#' @param save_plots Should plots saved as files?
+#' @param plots_dir Path to folder where plots will be saved.
+#' @param replicate_variable Name of column containing replicate experiment number
+#' @return A list of ggplot2 plots of OD over time. Each plot contains all the
+#' curves from a given run-plate-strain-biological replicate combination, with
+#' curves marked as flat highlighted.
+#' @export
+Make_flat_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
   # Split master data frame into individual dfs
   # Should the data be split by replicate?
   if(is.na(replicate_variable)){
-    split_df = Master_df %>%
+    split_df = curves_df %>%
       dplyr::mutate(.rep = "NA") %>%
       dplyr::group_split(Run, Plate, Strain)
   } else {
-    split_df = Master_df %>%
+    split_df = curves_df %>%
       dplyr::rename(".rep" = replicate_variable) %>%
       dplyr::group_split(Run, Plate, Strain, .rep)
   }

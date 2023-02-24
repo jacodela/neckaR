@@ -1,15 +1,25 @@
-# Function to plot all technical replicates from the same run-plate-strain-biological replicate combination
-Make_spline_plots = function(Master_df, OD_col = "OD", print_plots = FALSE,
+#' @title Make_flat_plot
+#' @description PENDING
+#' @param curves_df PENDING
+#' @param OD_col PENDING
+#' @param print_plots PENDING
+#' @param save_plots PENDING
+#' @param plots_dir PENDING
+#' @param show_outliers PENDING
+#' @param replicate_variable PENDING
+#' @return PENDING
+#' @export
+Make_spline_plots = function(curves_df, OD_col = "OD", print_plots = FALSE,
                              save_plots = FALSE, plots_dir = NA,
                              show_outliers = FALSE, replicate_variable = NA){
   # Split master data frame into individual dfs
   # Should the data be split by replicate?
   if(is.na(replicate_variable)){
-    split_df = Master_df %>%
+    split_df = curves_df %>%
       dplyr::mutate(.rep = "NA") %>%
       dplyr::group_split(Run, Plate, Strain)
   } else {
-    split_df = Master_df %>%
+    split_df = curves_df %>%
       dplyr::rename(".rep" = replicate_variable) %>%
       dplyr::group_split(Run, Plate, Strain, .rep)
   }

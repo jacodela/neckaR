@@ -17,3 +17,9 @@ Fix column names in Runs and Layout tables. All column names start
 with uppercase, replace spaces with underscores and executes universal name
 repair.
 }
+\examples{
+colnames(mtcars)
+# [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear" "carb"
+Fix_table_names(colnames(mtcars))
+# [1] "Mpg"  "Cyl"  "Disp" "Hp"   "Drat" "Wt"   "Qsec" "Vs"   "Am"   "Gear" "Carb"
+}

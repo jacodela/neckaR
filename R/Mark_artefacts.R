@@ -1,5 +1,4 @@
 #' @title Mark_artefacts
-#'
 #' @description Calculates a normalized OD value based on the maximum growth observed
 #' in the controls of a given plate. Then, uses the normalized OD to determine whether
 #' a curve shows an abnormal behavior. The function perform several tests to determine
@@ -44,7 +43,6 @@
 #' an abnormality. The value of these thresholds can be changed according to how
 #' stringent we want to make the abnormality detection: smaller `p_delta` and
 #' `p_delta2` values make the filtering more lenient, higher values are more strict.
-#'
 #' @param curves_df Master data frame containing raw OD measurements and
 #' Runs and Layout data.
 #' @param sum_inc Maximum number of spikes allowed in a given curve. Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make the detection more strict.

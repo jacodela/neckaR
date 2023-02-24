@@ -1,3 +1,15 @@
+#' @title Fit_splines_single
+#' @description Fit two splines to a single growth curve with the
+#' degrees of freedom specified by the user. Spline fits can be used to later
+#' detect outliers based on the difference of the fits.
+#' @param curves_df Master data frame containing OD measurements and
+#' Runs and Layout data.
+#' @param Time_col Variable in curves_df with time points of the curve
+#' @param OD_col Variable in curves_df with OD measurements of the curve
+#' @param degrees_freedom Vector of length two with the degrees of freedom
+#' of each of the splines to be fitted.
+#' @return PENDING
+#' @export
 # Function to fit spline and add results to original df
 # Fits two splines based on the degrees of freedom of input
 # Can be used to later compare fits
@@ -17,8 +29,18 @@ Fit_splines_single = function(curves_df, Time_col, OD_col, degrees_freedom){
 	out
 }
 
-# The above runs in a single curve
-# Run in the combined data frame with all runs in all plates
+#' @title Fit_splines
+#' @description Fit two splines to a series of bacterial growth curves with the
+#' degrees of freedom specified by the user. Spline fits can be used to later
+#' detect outliers based on the difference of the fits.
+#' @param curves_df Master data frame containing OD measurements and
+#' Runs and Layout data.
+#' @param Time_col Variable in curves_df with time points of the curve
+#' @param OD_col Variable in curves_df with OD measurements of the curve
+#' @param degrees_freedom Vector of length two with the degrees of freedom
+#' of each of the splines to be fitted.
+#' @return PENDING
+#' @export
 Fit_splines = function(curves_df, Time_col = "Time", OD_col = "OD", degrees_freedom = c(4,10), group_var = "RRPPRCC") {
   splines_df = curves_df %>%
     dplyr::group_split(!!rlang::sym(group_var)) %>%

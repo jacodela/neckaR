@@ -1,8 +1,6 @@
 #' @title Make_master_df
-#'
 #' @description Combines OD measurements with with run and layout information
 #' of an experiment
-#'
 #' @param Data_folder Path to the folder containing Excel files from TECAN plate
 #' reader
 #' @param Data_files Path to Excel files from TECAN plate reader.
@@ -11,7 +9,6 @@
 #' @param Duration Maximum number of time points measured in the experiment
 #' @param Design_tab_col Name of column with design information in Runs and
 #' Layout tables
-#'
 #' @return A data frame object that contains the OD measurements from a
 #' all the plates from all runs included, combined with the Runs and Layout
 #' information. Columns correspond to those included in Runs and Layout tables.

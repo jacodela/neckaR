@@ -1,13 +1,10 @@
 #' @title Make_curve_plots
-#'
 #' @description Plot all technical replicates from the same run-plate-strain-biological replicate combination
-#'
 #' @param curves_df Master data frame containing raw OD measurements and
 #' Runs and Layout data.
 #' @param save_plots Should plots saved as files?
 #' @param plots_dir Path to folder where plots will be saved.
 #' @param replicate_variable Name of column containing replicate experiment number
-#'
 #' @return A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biological
 #' replicate combination.
 #' @export

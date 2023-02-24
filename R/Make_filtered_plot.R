@@ -1,18 +1,15 @@
 #' @title Make_filtered_plot
-#'
-#' @description Plot all technical replicates from the same run-plate-strain-biological replicate combination
-#'
+#' @description Plot all technical replicates from the same run-plate-strain-biological
+#' replicate combination and highlight those marked as abnormal
 #' @param curves_df Master data frame containing OD measurements and whether a
 #' curve was marked as abnormal.
 #' @param save_plots Should plots saved as files?
 #' @param plots_dir Path to folder where plots will be saved.
 #' @param replicate_variable Name of column containing replicate experiment number
-#'
 #' @return A list of ggplot2 plots of OD over time. Each plot contains all the
 #' curves from a given run-plate-strain-biological replicate combination, with
 #' curves marked as abnormal highlighted.
 #' @export
-# Function to plot all technical replicates from the same run-plate-strain-biological replicate combination
 Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
   # Split master data frame into individual dfs
   # Should the data be split by replicate?
