@@ -22,6 +22,8 @@ Runs and Layout data.}
 
 \item{degrees_freedom}{Vector of length two with the degrees of freedom
 of each of the splines to be fitted.}
+
+\item{group_var}{Variables in curves_df used to group curves.}
 }
 \value{
 PENDING

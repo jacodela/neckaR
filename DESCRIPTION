@@ -12,7 +12,7 @@ Description: Preparation and analysis of bacterial growth curves obtained from
 	phases.
 URL: https://github.com/jacodela/neckar
 BugReports: https://github.com/jacodela/neckaR/issues
-License: What license is it under?
+License: MIT + file LICENSE
 Depends:
     R (>= 4.0)
 Imports:

@@ -39,6 +39,7 @@ Fit_splines_single = function(curves_df, Time_col, OD_col, degrees_freedom){
 #' @param OD_col Variable in curves_df with OD measurements of the curve
 #' @param degrees_freedom Vector of length two with the degrees of freedom
 #' of each of the splines to be fitted.
+#' @param group_var Variables in curves_df used to group curves.
 #' @return PENDING
 #' @export
 Fit_splines = function(curves_df, Time_col = "Time", OD_col = "OD", degrees_freedom = c(4,10), group_var = "RRPPRCC") {
