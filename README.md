@@ -4,6 +4,9 @@
 # neckaR <a href='https://lisamaierlab.com/'><img src='man/figures/neckaR.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
+
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/jacodela/neckaR/blob/main/LICENSE.md)
 <!-- badges: end -->
 
 The `neckaR` package is a collection of functions for the analysis of
