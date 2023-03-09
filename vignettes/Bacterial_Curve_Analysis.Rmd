@@ -46,6 +46,8 @@ well as the `fitdistrplus` package for quality control of the curves.
 Make sure these packages are installed. 
 
 ```{r}
+# R functions
+library(neckaR)
 library(tidyverse)
 library(conflicted)
 ```
@@ -57,13 +59,8 @@ conflict_prefer("filter", "dplyr")
 
 # Load data and functions
 ```{r}
-# Set work dir and load example data
+# Set work dir
 base_dir = "/home/jacobo/Documents/Projects/Curves/neckaR"
-
-# R functions
-# list.files(file.path(base_dir, "R"), pattern = "*.R", full.names = TRUE) %>% 
-#   walk(function(x) source(x))
-devtools::load_all(path = "/home/jacobo/Documents/Projects/Curves/neckaR/")
 ```
 
 ## Build master data frame
@@ -89,7 +86,8 @@ distributed across multiple tables that should be created beforehand.
 
 ```{r}
 # List file locations
-data_dir = file.path(base_dir, "inst/extdata/")
+extdata = system.file("extdata", package = "neckaR")
+data_dir = file.path(extdata, "Bovatus")
 
 # List raw plate reader files
 Raw_Data_files = list.files(data_dir, pattern = "RUN")

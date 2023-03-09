@@ -7,10 +7,10 @@
 Detect_MIC(
   curves_df,
   threshold,
-  concentration_var,
   group_var,
-  control_var = "Control",
-  AUC_var = "normAUC"
+  control_var = Control,
+  AUC_var = normAUC,
+  concentration_var = Concentration
 )
 }
 \arguments{
@@ -20,14 +20,14 @@ Runs and Layout data.}
 \item{threshold}{Area under the curve (AUC) below which a bacterial strain
 is considered to be inhibited by a treatment.}
 
-\item{concentration_var}{Variable in curves_df containing concentration data.}
-
 \item{group_var}{Variables in curves_df used to group curves.}
 
 \item{control_var}{Variable in curves_df stating whether a curve corresponds
 to a control or a not.}
 
 \item{AUC_var}{Variable in curves_df with AUC data.}
+
+\item{concentration_var}{Variable in curves_df containing concentration data.}
 }
 \value{
 A data frame object with a variable stating whether the MIC of a given

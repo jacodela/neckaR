@@ -4,7 +4,11 @@
 \alias{Detect_MIC_single}
 \title{Detect_MIC_single}
 \usage{
-Detect_MIC_single(curves_df, threshold, concentration_var, group_var)
+Detect_MIC_single(
+  curves_df,
+  threshold = 0.75,
+  concentration_var = Concentration
+)
 }
 \arguments{
 \item{curves_df}{Master data frame containing raw OD measurements and
@@ -14,8 +18,6 @@ Runs and Layout data.}
 is considered to be inhibited by a treatment.}
 
 \item{concentration_var}{Variable in curves_df containing concentration data}
-
-\item{group_var}{variables used to group curves}
 }
 \value{
 A data frame object with a variable stating whether the MIC of a given

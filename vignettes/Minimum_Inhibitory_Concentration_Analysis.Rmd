@@ -1,0 +1,194 @@
+---
+title: "Calculation of minimum inhibitory concentrations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculation of minimum inhibitory concentrations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Aim
+Jacobo de la Cuesta-Zuluaga. March 2023.
+
+This notebook introduces the calculation of minimum inhibitory concentrations. 
+from bacterial growth curves. This functionality is an extension to the basic
+loading and cleaning of bacterial growth curves and the calculation of areas under
+the curve introduced in the `Bacterial_curve_Analysis` vignette. For a detailed
+explanation of these steps, please refer to this file.
+
+```{r}
+# Load R packages needed in this vignette
+library(neckaR)
+library(tidyverse)
+library(conflicted)
+```
+
+```{r}
+# Solve conflicts
+conflict_prefer("filter", "dplyr")
+```
+
+# Load data
+```{r}
+# List file locations
+extdata = system.file("extdata", package = "neckaR")
+data_dir = file.path(extdata, "MICs")
+
+# List raw plate reader files
+Raw_Data_files = list.files(data_dir, pattern = "Run")
+
+# Tab1
+Runs = file.path(data_dir, "Tab1.xlsx")
+
+# Tab2
+Layout = file.path(data_dir, "Tab2.xlsx")
+```
+
+```{r}
+# Create master data frame
+MIC_master_df = Make_master_df(Data_folder = data_dir, 
+															 Data_files = Raw_Data_files, 
+															 Runs_path = Runs, 
+															 Layout_path = Layout, 
+															 Design_tab_col = "Design")
+
+```
+```{r}
+MIC_master_df %>% 
+	head()
+```
+# Plot raw curves
+```{r}
+# Plot raw curves
+MIC_master_plots = Make_curve_plots(MIC_master_df, 
+																		save_plots = FALSE,
+																		replicate_variable = "Replicate")
+
+# Show just the first 3 graphs
+MIC_master_plots[1:3]
+```
+
+# Adjust ODs
+```{r}
+MIC_adjusted_df = Adjust_OD(curves_df = MIC_master_df, 
+														control_factor = "Treatment", 
+														control_level = "Water", 
+														offset_control = 0.02) %>% 
+	Calculate_lag(offset_control = 0.02)
+
+# Print head
+MIC_adjusted_df %>% 
+	head()
+```
+
+# Plot cut-offs 
+```{r}
+cutoff_plot = Make_cutoff_plots(curves_df = MIC_adjusted_df, 
+																save_plots = FALSE,  
+																vline = "cutoff")
+
+cutoff_plot
+```
+
+# Adjust cut-off values
+```{r}
+# Create list
+replace_values = list(c(210, 10),
+											c(201, 7),
+											c(209, 6),
+											c(701, 10),
+											c(403, 10))
+
+# replace values
+MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df, 
+															 replace_values)
+```
+
+## Plot curves up to cut-off times
+```{r}
+# cut all curves at the cut-off
+# Note that this is used only for plotting
+MIC_cutoff_df = MIC_adjusted_df %>% 
+  filter(Time < (cutoff_time + 0.5)) %>%
+  arrange(Time)
+
+# Plot
+MIC_cutoff_df %>% 
+  filter(Control == TRUE) %>% 
+  Make_cutoff_plots(save_plots = FALSE,  
+                    plot_name = "Truncated_control_cutoff")
+```
+# Growth curve quality control
+## Mark artefacts
+
+```{r}
+# Run mark artefacts function
+MIC_marked_df = Mark_artefacts(MIC_readjusted_df,
+															 sum_inc = 3,
+															 increased_sd = 2,
+															 t0_sd = 3,
+															 p_delta = 1e-3,
+															 p_delta2 = 1e-3)
+```
+
+```{r}
+# Plot marked curves
+MIC_filtered_plots = Make_filtered_plot(MIC_marked_df,
+																				save_plots = FALSE,
+																				replicate_variable = "Replicate")
+
+MIC_filtered_plots[1:3]
+
+```
+
+# Calculate AUC
+```{r}
+MIC_filtered_df = MIC_marked_df %>% 
+  filter(discard_conc == FALSE)
+```
+
+```{r}
+MIC_AUC_df = Calculate_AUC(MIC_filtered_df)
+```
+
+# Detect MIC
+```{r}
+# Create df with max OD and cut-off times of each curve
+MIC_max_OD_df = MIC_filtered_df %>% 
+	group_by(RRPPRCC) %>% 
+	slice(which.min(cutoff_time - Time)) %>% 
+	ungroup() %>% 
+	select(RRPPRCC, Strain, Treatment, Concentration, Control, Replicate, 
+				 Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
+
+# Select only normalized AUC
+MIC_selected_AUC_df = MIC_AUC_df %>% 
+	select(RRPPRCC, normAUC)
+
+# Combined df
+MIC_AUC_final_df = left_join(MIC_max_OD_df, MIC_selected_AUC_df, by = "RRPPRCC")
+
+MIC_AUC_final_df %>% 
+	head()
+```
+
+```{r}
+MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df, 
+										 threshold = 0.75, 
+										 concentration_var = Concentration, 
+										 group_var = c("Treatment", "Strain"), 
+										 control_var = Control)
+```
+
+```{r}
+MIC_df %>% 
+	arrange(Strain)
+```
+
