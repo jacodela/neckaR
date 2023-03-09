@@ -45,7 +45,7 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 	is_flat = dplyr::case_when(mean_diff > OD_diff_cutoff ~ FALSE,
 														 (mean_diff <= OD_diff_cutoff & last_measurement > last_OD) == TRUE ~ FALSE,
 														 (mean_diff <= OD_diff_cutoff & last_measurement < last_OD) == TRUE ~ TRUE)
-	is_flat
+	data.frame(flat = is_flat)
 
 }
 
@@ -67,9 +67,10 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 #' @export
 Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, group_var = "RRPPRCC", last_OD = 1) {
 	curves_df %>%
-		dplyr::group_split(!!rlang::sym(group_var)) %>%
-		purrr::map_df(function(x) dplyr::mutate(x, flat = Mark_flat_single(x,
-																																OD_col = OD_col,
-																																OD_diff_cutoff = OD_diff_cutoff,
-																																last_OD = last_OD)))
+		dplyr::group_by(!!rlang::sym(group_var)) %>%
+		dplyr::do(Mark_flat_single(.,
+															 OD_col = OD_col,
+															 OD_diff_cutoff = OD_diff_cutoff,
+															 last_OD = last_OD)) %>%
+	left_join(curves_df, .)
 }

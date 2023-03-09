@@ -72,6 +72,3 @@ Detect_MIC = function(curves_df, threshold, group_var, control_var = Control, AU
 	# Return
 	MICs
 }
-
-
-

@@ -476,16 +476,16 @@ marked_flat_df %>%
   head()
 ```
 
+
 In addition, we can plot the the flat growth curves (here in orange) with the
 `Make_flat_plot` function
 ```{r}
-
 flat_plots = Make_flat_plot(marked_flat_df, 
 														save_plots = TRUE,
 														plots_dir = fig_dir,
 														replicate_variable = "Replicate")
 
-flat_plots
+flat_plots[1:3]
 ```
 
 # Calculate AUC
