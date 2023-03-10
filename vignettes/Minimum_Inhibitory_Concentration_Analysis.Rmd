@@ -23,6 +23,8 @@ loading and cleaning of bacterial growth curves and the calculation of areas und
 the curve introduced in the `Bacterial_curve_Analysis` vignette. For a detailed
 explanation of these steps, please refer to this file.
 
+# Libraries
+
 ```{r}
 # Load R packages needed in this vignette
 library(neckaR)
@@ -36,6 +38,12 @@ conflict_prefer("filter", "dplyr")
 ```
 
 # Load data
+First, we will load the data. Recall that we need to specify the paths of 
+the *Runs* a.k.a `Tab1` and *Layout* a.k.a `Tab2` files, in addition to
+the raw files coming from the plate reader.
+
+In this case, the *Layout* table should contain data regarding the concentration
+of the treatments used.
 ```{r}
 # List file locations
 extdata = system.file("extdata", package = "neckaR")
@@ -51,6 +59,8 @@ Runs = file.path(data_dir, "Tab1.xlsx")
 Layout = file.path(data_dir, "Tab2.xlsx")
 ```
 
+
+We create the master data frame
 ```{r}
 # Create master data frame
 MIC_master_df = Make_master_df(Data_folder = data_dir, 
@@ -65,6 +75,7 @@ MIC_master_df %>%
 	head()
 ```
 # Plot raw curves
+We then plot and inspect the raw curves
 ```{r}
 # Plot raw curves
 MIC_master_plots = Make_curve_plots(MIC_master_df, 
@@ -76,19 +87,23 @@ MIC_master_plots[1:3]
 ```
 
 # Adjust ODs
+Next, we will adjust the optical density (OD). For this, we need to specify the
+name of the column containing the treatment information and which of them corresponds
+to the control.
 ```{r}
 MIC_adjusted_df = Adjust_OD(curves_df = MIC_master_df, 
 														control_factor = "Treatment", 
 														control_level = "Water", 
-														offset_control = 0.02) %>% 
-	Calculate_lag(offset_control = 0.02)
+														offset_control = 0.02) 
 
 # Print head
 MIC_adjusted_df %>% 
 	head()
 ```
 
-# Plot cut-offs 
+# End of exponential phase
+Since areas under the curve (AUC) are calculated based on the end of the exponential
+phase of the controls, we need to plot and inspect the cut of values.
 ```{r}
 cutoff_plot = Make_cutoff_plots(curves_df = MIC_adjusted_df, 
 																save_plots = FALSE,  
@@ -97,9 +112,11 @@ cutoff_plot = Make_cutoff_plots(curves_df = MIC_adjusted_df,
 cutoff_plot
 ```
 
-# Adjust cut-off values
+## Adjust cut-off values
+We can manually adjust the cut-off values in case we're not satisfied with 
+the ones automatically detected by the functions.
 ```{r}
-# Create list
+# Create list of values to replace
 replace_values = list(c(210, 10),
 											c(201, 7),
 											c(209, 6),
@@ -126,8 +143,8 @@ MIC_cutoff_df %>%
                     plot_name = "Truncated_control_cutoff")
 ```
 # Growth curve quality control
-## Mark artefacts
-
+Once the cut-off values are set, we proceed to do the quality control of the 
+growth curves.
 ```{r}
 # Run mark artefacts function
 MIC_marked_df = Mark_artefacts(MIC_readjusted_df,
@@ -137,7 +154,9 @@ MIC_marked_df = Mark_artefacts(MIC_readjusted_df,
 															 p_delta = 1e-3,
 															 p_delta2 = 1e-3)
 ```
-
+## Plot marked curves
+Recall that we can visually inspect the curves marked as abnormal. For methods
+to override the identified curves, see the `Bacterial_curve_Analysis` vignette.
 ```{r}
 # Plot marked curves
 MIC_filtered_plots = Make_filtered_plot(MIC_marked_df,
@@ -148,17 +167,26 @@ MIC_filtered_plots[1:3]
 
 ```
 
-# Calculate AUC
+## Remove abnormal curves
 ```{r}
 MIC_filtered_df = MIC_marked_df %>% 
   filter(discard_conc == FALSE)
 ```
 
+# Calculate AUC
+Once abnormal curves have been discarded, we can calculate the AUCs
 ```{r}
 MIC_AUC_df = Calculate_AUC(MIC_filtered_df)
 ```
 
-# Detect MIC
+```{r}
+MIC_AUC_df %>% 
+	head()
+```
+
+
+We can create a data frame that contains information about the AUC, maximum OD and 
+cut-off time for each individual curve. This table can be useful in downstream analyses.
 ```{r}
 # Create df with max OD and cut-off times of each curve
 MIC_max_OD_df = MIC_filtered_df %>% 
@@ -166,7 +194,7 @@ MIC_max_OD_df = MIC_filtered_df %>%
 	slice(which.min(cutoff_time - Time)) %>% 
 	ungroup() %>% 
 	select(RRPPRCC, Strain, Treatment, Concentration, Control, Replicate, 
-				 Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
+				 Max_OD = OD, Max_ODc01 = ODc01, cutoff_time)  
 
 # Select only normalized AUC
 MIC_selected_AUC_df = MIC_AUC_df %>% 
@@ -179,6 +207,10 @@ MIC_AUC_final_df %>%
 	head()
 ```
 
+# Detect MIC
+Finally, we can use either the summary we just created or the table with
+AUCs generated to determine the minimum inhibitory concentration for each
+treatment
 ```{r}
 MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df, 
 										 threshold = 0.75, 
@@ -190,5 +222,11 @@ MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df,
 ```{r}
 MIC_df %>% 
 	arrange(Strain)
+```
+
+
+# Session Info
+```{r}
+sessionInfo()
 ```
 

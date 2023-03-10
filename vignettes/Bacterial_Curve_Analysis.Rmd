@@ -547,3 +547,7 @@ final_df = left_join(Max_OD_df, selected_AUC_df, by = "RRPPRCC")
 final_df %>% 
 	head()
 ```
+# Session Info
+```{r}
+sessionInfo()
+```
