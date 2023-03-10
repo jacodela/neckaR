@@ -42,9 +42,10 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 	## Determine whether mean difference is above threshold.
 	## If mean difference is below threshold but last measurement
 	## greater than user-defined value, consider non-flat
-	is_flat = dplyr::case_when(mean_diff > OD_diff_cutoff ~ FALSE,
-														 (mean_diff <= OD_diff_cutoff & last_measurement > last_OD) == TRUE ~ FALSE,
-														 (mean_diff <= OD_diff_cutoff & last_measurement < last_OD) == TRUE ~ TRUE)
+	is_flat = data.table::fcase(mean_diff > OD_diff_cutoff, FALSE,
+														 (mean_diff <= OD_diff_cutoff & last_measurement > last_OD) == TRUE, FALSE,
+														 (mean_diff <= OD_diff_cutoff & last_measurement < last_OD) == TRUE, TRUE)
+
 	data.frame(flat = is_flat)
 
 }

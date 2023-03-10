@@ -28,7 +28,8 @@ Imports:
     magrittr,
     rlang,
     grDevices,
-    stats
+    stats,
+    data.table
 Suggests:
     anomalize,
     broom,

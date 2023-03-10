@@ -480,7 +480,7 @@ marked_flat_df %>%
 In addition, we can plot the the flat growth curves (here in orange) with the
 `Make_flat_plot` function
 ```{r}
-flat_plots = Make_flat_plot(marked_flat_df, 
+flat_plots = Make_flat_plot(marked_flat_df,
 														save_plots = TRUE,
 														plots_dir = fig_dir,
 														replicate_variable = "Replicate")

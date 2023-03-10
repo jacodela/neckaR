@@ -105,8 +105,8 @@ MIC_adjusted_df %>%
 Since areas under the curve (AUC) are calculated based on the end of the exponential
 phase of the controls, we need to plot and inspect the cut of values.
 ```{r}
-cutoff_plot = Make_cutoff_plots(curves_df = MIC_adjusted_df, 
-																save_plots = FALSE,  
+cutoff_plot = Make_cutoff_plots(curves_df = MIC_adjusted_df,
+																save_plots = FALSE,
 																vline = "cutoff")
 
 cutoff_plot
@@ -124,7 +124,7 @@ replace_values = list(c(210, 10),
 											c(403, 10))
 
 # replace values
-MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df, 
+MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df,
 															 replace_values)
 ```
 
@@ -133,14 +133,14 @@ MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df,
 # cut all curves at the cut-off
 # Note that this is used only for plotting
 MIC_cutoff_df = MIC_adjusted_df %>% 
-  filter(Time < (cutoff_time + 0.5)) %>%
-  arrange(Time)
+	filter(Time < (cutoff_time + 0.5)) %>%
+	arrange(Time)
 
 # Plot
 MIC_cutoff_df %>% 
-  filter(Control == TRUE) %>% 
-  Make_cutoff_plots(save_plots = FALSE,  
-                    plot_name = "Truncated_control_cutoff")
+	filter(Control == TRUE) %>% 
+	Make_cutoff_plots(save_plots = FALSE,
+										plot_name = "Truncated_control_cutoff")
 ```
 # Growth curve quality control
 Once the cut-off values are set, we proceed to do the quality control of the 
@@ -169,8 +169,8 @@ MIC_filtered_plots[1:3]
 
 ## Remove abnormal curves
 ```{r}
-MIC_filtered_df = MIC_marked_df %>% 
-  filter(discard_conc == FALSE)
+MIC_filtered_df = MIC_marked_df %>%
+	filter(discard_conc == FALSE)
 ```
 
 # Calculate AUC
@@ -212,10 +212,10 @@ Finally, we can use either the summary we just created or the table with
 AUCs generated to determine the minimum inhibitory concentration for each
 treatment
 ```{r}
-MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df, 
-										 threshold = 0.75, 
-										 concentration_var = Concentration, 
-										 group_var = c("Treatment", "Strain"), 
+MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df,
+										 threshold = 0.75,
+										 concentration_var = Concentration,
+										 group_var = c("Treatment", "Strain"),
 										 control_var = Control)
 ```
 
