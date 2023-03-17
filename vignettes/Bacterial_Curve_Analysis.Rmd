@@ -48,15 +48,6 @@ which you should also already have.
 ```{r}
 # R functions
 library(neckaR)
-library(dplyr)
-library(readxl)
-library(ggplot2)
-library(conflicted)
-```
-
-```{r}
-# Solve conflicts
-conflict_prefer("filter", "dplyr")
 ```
 
 ## Build master data frame
@@ -99,12 +90,12 @@ This is how the `Runs` and `Layout` table should look like
 ```{r}
 # Runs table example
 file.path(data_dir, "Tab1.xlsx") %>% 
-	read_xlsx() %>% 
+	readxl::read_xlsx() %>% 
 	head()
 
 # Layout table example
 file.path(data_dir, "Tab2.xlsx") %>% 
-	read_xlsx() %>% 
+	readxl::read_xlsx() %>% 
 	head()
 ```
 
@@ -246,9 +237,9 @@ We can manually check which Run/Plate combinations have a cut-off time below
 ```{r}
 # Cut-off values of 12 or less
 adjusted_df %>% 
-  filter(Control== TRUE, cutoff_time <= 12) %>% 
-  count(RRPP) %>% 
-  select(-n)
+  dplyr::filter(Control== TRUE, cutoff_time <= 12) %>% 
+  dplyr::count(RRPP) %>% 
+  dplyr::select(-n)
 ```
 
 After visually inspecting the plots, we could change some of the cut-off values
@@ -266,7 +257,7 @@ replace_values = list(c(306, 11))
 readjusted_df = Fix_cutoff(adjusted_df, replace_values)
 
 readjusted_df %>% 
-  filter(RRPP == 306)
+  dplyr::filter(RRPP == 306)
 ```
 
 For the sake of this example, we will not use manually changed values, so
@@ -281,12 +272,12 @@ the last plot as follows
 # cut all curves at the cut-off
 # Note that this is used only for plotting
 cutoff_df = adjusted_df %>% 
-  filter(Time < (cutoff_time + 0.5)) %>%
-  arrange(Time)
+  dplyr::filter(Time < (cutoff_time + 0.5)) %>%
+  dplyr::arrange(Time)
 
 # Plot
 cutoff_df %>% 
-  filter(Control == TRUE) %>% 
+  dplyr::filter(Control == TRUE) %>% 
   Make_cutoff_plots(save_plots = FALSE,  
                     plot_name = "Truncated_control_cutoff")
 ```
@@ -381,7 +372,7 @@ that follows:
 # Rewrite discard_conc
 # Not consider abnormal_t0 abnormality
 alt_marked_df = marked_df %>% 
-	mutate(discard_conc = (is_increased | signif_delta | signif_delta2))
+	dplyr::mutate(discard_conc = (is_increased | signif_delta | signif_delta2))
 
 alt_filtered_plots = Make_filtered_plot(alt_marked_df,
 																				save_plots = FALSE, 
@@ -400,7 +391,7 @@ rest of the curve. For example, the following curves:
 ```{r}
 # Plot
 marked_df %>% 
-  filter(Control == TRUE, RRPP == 201) %>% 
+  dplyr::filter(Control == TRUE, RRPP == 201) %>% 
   Make_cutoff_plots(save_plots = FALSE, 
                     vline = "lag")
 ```
@@ -418,23 +409,23 @@ spikes_df = adjusted_df %>%
 
 # Example of curve with peak at the start
 spikes_df %>% 
-  filter(RRPPRCC == 201307) %>% 
-  ggplot(aes(x = Time, y = ODc01, color = increased)) +
-  geom_point() +
-  theme_light()
+  dplyr::filter(RRPPRCC == 201307) %>% 
+  ggplot2::ggplot(ggplot2::aes(x = Time, y = ODc01, color = increased)) +
+  ggplot2::geom_point() +
+  ggplot2::theme_light()
 ```
 
 Then, we could select curves that contain spikes and remove them.
 ```{r}
 # Curves containing spikes
 discard_spikes = spikes_df %>% 
-  filter(increased == TRUE) %>% 
-  select(RRPPRCC) %>% 
-  distinct()
+  dplyr::filter(increased == TRUE) %>% 
+  dplyr::select(RRPPRCC) %>% 
+  dplyr::distinct()
 
 # Remove from analysis
 adjusted_noSpike_df = spikes_df %>% 
-  filter(!(RRPPRCC %in% discard_spikes$RRPPRCC))
+  dplyr::filter(!(RRPPRCC %in% discard_spikes$RRPPRCC))
 
 ```
 
@@ -485,7 +476,7 @@ Finally in this example, we will calculate the AUC for each of the curves.
 First up, though, we need to remove bad quality curves.
 ```{r}
 filtered_marked_df = marked_df %>% 
-  filter(discard_conc == FALSE)
+  dplyr::filter(discard_conc == FALSE)
 ```
 
 For each curve, the `Calculate_AUC` uses the trapezoidal rule. Briefly, the
@@ -524,17 +515,17 @@ data frame as follows:
 ```{r}
 # Create df with max OD and cut-off times of each curve
 Max_OD_df = filtered_marked_df %>% 
-	group_by(RRPPRCC) %>% 
-	slice(which.min(cutoff_time - Time)) %>% 
-	ungroup() %>% 
-	select(RRPPRCC, Drug, Drug_name, Replicate, Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
+	dplyr::group_by(RRPPRCC) %>% 
+	dplyr::slice(which.min(cutoff_time - Time)) %>% 
+	dplyr::ungroup() %>% 
+	dplyr::select(RRPPRCC, Drug, Drug_name, Replicate, Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
 
 # Select only normalized AUC
 selected_AUC_df = AUC_df %>% 
-	select(RRPPRCC, normAUC)
+	dplyr::select(RRPPRCC, normAUC)
 
 # Combined df
-final_df = left_join(Max_OD_df, selected_AUC_df, by = "RRPPRCC")
+final_df = dplyr::left_join(Max_OD_df, selected_AUC_df, by = "RRPPRCC")
 
 final_df %>% 
 	head()

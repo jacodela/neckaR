@@ -15,7 +15,7 @@ Detect_MIC_single <- function(curves_df, threshold = 0.75, concentration_var = C
 		dplyr::filter(normAUCmon <= 0.75) %>%
 		dplyr::slice(1) %>%
 		dplyr::ungroup() %>%
-		dplyr::mutate(qual = if_else(equal_min_con == TRUE, "<", "=")) %>%
+		dplyr::mutate(qual = dplyr::if_else(equal_min_con == TRUE, "<", "=")) %>%
 		dplyr::select(qual, {{concentration_var}})
 
 	greater_df = curves_df %>%

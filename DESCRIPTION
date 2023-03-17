@@ -35,8 +35,6 @@ Suggests:
     broom,
     knitr,
     rmarkdown,
-    tidyverse,
-    conflicted,
     testthat (>= 3.0.0),
     withr
 Encoding: UTF-8

@@ -73,5 +73,5 @@ Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, group_va
 															 OD_col = OD_col,
 															 OD_diff_cutoff = OD_diff_cutoff,
 															 last_OD = last_OD)) %>%
-	left_join(curves_df, .)
+		dplyr::left_join(curves_df, .)
 }

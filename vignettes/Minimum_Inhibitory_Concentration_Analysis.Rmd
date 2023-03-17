@@ -29,13 +29,6 @@ explanation of these steps, please refer to this file.
 # Load R packages needed in this vignette
 # R functions
 library(neckaR)
-library(dplyr)
-library(conflicted)
-```
-
-```{r}
-# Solve conflicts
-conflict_prefer("filter", "dplyr")
 ```
 
 # Load data
@@ -134,12 +127,12 @@ MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df,
 # cut all curves at the cut-off
 # Note that this is used only for plotting
 MIC_cutoff_df = MIC_adjusted_df %>% 
-	filter(Time < (cutoff_time + 0.5)) %>%
-	arrange(Time)
+	dplyr::filter(Time < (cutoff_time + 0.5)) %>%
+	dplyr::arrange(Time)
 
 # Plot
 MIC_cutoff_df %>% 
-	filter(Control == TRUE) %>% 
+	dplyr::filter(Control == TRUE) %>% 
 	Make_cutoff_plots(save_plots = FALSE,
 										plot_name = "Truncated_control_cutoff")
 ```
@@ -171,7 +164,7 @@ MIC_filtered_plots[1:3]
 ## Remove abnormal curves
 ```{r}
 MIC_filtered_df = MIC_marked_df %>%
-	filter(discard_conc == FALSE)
+	dplyr::filter(discard_conc == FALSE)
 ```
 
 # Calculate AUC
@@ -191,18 +184,18 @@ cut-off time for each individual curve. This table can be useful in downstream a
 ```{r}
 # Create df with max OD and cut-off times of each curve
 MIC_max_OD_df = MIC_filtered_df %>% 
-	group_by(RRPPRCC) %>% 
-	slice(which.min(cutoff_time - Time)) %>% 
-	ungroup() %>% 
-	select(RRPPRCC, Strain, Treatment, Concentration, Control, Replicate, 
-				 Max_OD = OD, Max_ODc01 = ODc01, cutoff_time)  
+	dplyr::group_by(RRPPRCC) %>% 
+	dplyr::slice(which.min(cutoff_time - Time)) %>% 
+	dplyr::ungroup() %>% 
+	dplyr::select(RRPPRCC, Strain, Treatment, Concentration, Control, Replicate, 
+								Max_OD = OD, Max_ODc01 = ODc01, cutoff_time)  
 
 # Select only normalized AUC
 MIC_selected_AUC_df = MIC_AUC_df %>% 
-	select(RRPPRCC, normAUC)
+	dplyr::select(RRPPRCC, normAUC)
 
 # Combined df
-MIC_AUC_final_df = left_join(MIC_max_OD_df, MIC_selected_AUC_df, by = "RRPPRCC")
+MIC_AUC_final_df = dplyr::left_join(MIC_max_OD_df, MIC_selected_AUC_df, by = "RRPPRCC")
 
 MIC_AUC_final_df %>% 
 	head()
@@ -222,7 +215,7 @@ MIC_df  = Detect_MIC(curves_df = MIC_AUC_final_df,
 
 ```{r}
 MIC_df %>% 
-	arrange(Strain)
+	dplyr::arrange(Strain)
 ```
 
 
