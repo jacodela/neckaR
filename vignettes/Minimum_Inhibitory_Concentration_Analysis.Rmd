@@ -27,8 +27,9 @@ explanation of these steps, please refer to this file.
 
 ```{r}
 # Load R packages needed in this vignette
+# R functions
 library(neckaR)
-library(tidyverse)
+library(dplyr)
 library(conflicted)
 ```
 

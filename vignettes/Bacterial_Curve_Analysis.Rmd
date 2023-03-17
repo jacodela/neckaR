@@ -38,29 +38,25 @@ area under the curve (AUC) or maximum OD for each of the individual curves.
 
 # Libraries
 
-The present example makes heavy use of packages from the `tidyverse`. The
-`conflicted` package is also used to solve possible conflicts in function 
-assignations; this is not mandatory but it is recommended. In addition,
-we will use the `readxl` both to read user-made tables and under the hood, as 
-well as the `fitdistrplus` package for quality control of the curves.
-Make sure these packages are installed. 
-
+The present example makes heavy use of packages from the `tidyverse`. You don't
+need the complete `tidyverse` suite installed; most of the required packages were
+installed together with `neckaR`, though for this example we will use many functions
+from a couple packages in particular: `dplyr` (for the manipulation of the tables
+and data), `conflicted` (to solve possible conflicts in function assignations),
+and `ggplot2` to generate plots. Finally, we will also use the `readxl` package, 
+which you should also already have.
 ```{r}
 # R functions
 library(neckaR)
-library(tidyverse)
+library(dplyr)
+library(readxl)
+library(ggplot2)
 library(conflicted)
 ```
 
 ```{r}
 # Solve conflicts
 conflict_prefer("filter", "dplyr")
-```
-
-# Load data and functions
-```{r}
-# Set work dir
-base_dir = "/home/jacobo/Documents/Projects/Curves/neckaR"
 ```
 
 ## Build master data frame
@@ -103,25 +99,26 @@ This is how the `Runs` and `Layout` table should look like
 ```{r}
 # Runs table example
 file.path(data_dir, "Tab1.xlsx") %>% 
-	readxl::read_xlsx() %>% 
+	read_xlsx() %>% 
 	head()
 
 # Layout table example
 file.path(data_dir, "Tab2.xlsx") %>% 
-	readxl::read_xlsx() %>% 
+	read_xlsx() %>% 
 	head()
 ```
 
 
 
-```{r}
+```{r eval=FALSE}
+base_dir = "PATH/TO/YOUR/WORK/DIRECTORY"
 # Output dirs
 fig_dir = file.path(base_dir, "example/figures") 
 tab_dir = file.path(base_dir, "example/tables") 
 
 # Create dirs
-dir.create(fig_dir, recursive = TRUE)
-dir.create(tab_dir, recursive = TRUE)
+# dir.create(fig_dir, recursive = TRUE)
+# dir.create(tab_dir, recursive = TRUE)
 ```
 
 The `Make_master_df` function takes as input the folder with the raw data, the 
@@ -182,8 +179,7 @@ including the name of the column in the `replicate_vaiable` parameter.
 ```{r}
 # Plot raw curves
 Master_plots = Make_curve_plots(master_df, 
-                                save_plots = TRUE,
-                                plots_dir = fig_dir, 
+                                save_plots = FALSE,
                                 replicate_variable = "Replicate")
 
 # Show just the first 3 graphs
@@ -238,8 +234,7 @@ Just like the other plotting functions of this package, the plots can be saved
 as `pdf` in an specified directory.
 ```{r}
 cutoff_plot = Make_cutoff_plots(curves_df = adjusted_df, 
-                  save_plots = TRUE,  
-                  plots_dir = fig_dir, 
+                  save_plots = FALSE,  
                   vline = "cutoff")
 
 cutoff_plot
@@ -292,8 +287,7 @@ cutoff_df = adjusted_df %>%
 # Plot
 cutoff_df %>% 
   filter(Control == TRUE) %>% 
-  Make_cutoff_plots(save_plots = TRUE,  
-                    plots_dir = fig_dir, 
+  Make_cutoff_plots(save_plots = FALSE,  
                     plot_name = "Truncated_control_cutoff")
 ```
 
@@ -362,7 +356,6 @@ We can then plot the curves that were marked
 # Plot marked curves
 filtered_plots = Make_filtered_plot(marked_df,
                    save_plots = FALSE,
-                   plots_dir = fig_dir,
                    replicate_variable = "Replicate")
 
 filtered_plots[1:3]
@@ -481,8 +474,7 @@ In addition, we can plot the the flat growth curves (here in orange) with the
 `Make_flat_plot` function
 ```{r}
 flat_plots = Make_flat_plot(marked_flat_df,
-														save_plots = TRUE,
-														plots_dir = fig_dir,
+														save_plots = FALSE,
 														replicate_variable = "Replicate")
 
 flat_plots[1:3]
