@@ -1,14 +1,10 @@
-#'	 @title Sort_by_run
-#'
-#'	 @description sorts a vector of filenames based on the substring that contains
-#'	 the run information in a case-insensitive manner.
-#'	 @param file_list a character vector of filenames to be sorted based on the
-#'	 RUN number.
-#'	 @return A character vector of file names sorted by the RUN number.
-#'	 @examples
-#'	 listed_files = c("11_rUn01_LM16-133_NT5054.xlsx", "22_run03_LM16-135_NT5054.xlsx", "33_RUN02_LM16-134_NT5054.xlsx")
-#'	 Sort_by_run(listed_files)
-#'	 @export
+#' @title Sort_by_run
+#' @description sorts a vector of file names based on the substring that contains
+#' the run information in a case-insensitive manner.
+#' @param file_list a character vector of file names to be sorted based on the
+#' RUN number.
+#' @return A character vector of file names sorted by the RUN number.
+#' @export
 # Define a function to sort filenames based on the RUN number (case-insensitive)
 # file_list: a character vector of filenames to be sorted
 # Returns a character vector of filenames sorted by RUN number
@@ -25,3 +21,6 @@ Sort_by_run = function(file_list) {
 	# Return the sorted vector
 	return(file_list_sorted)
 }
+
+# filelist <- c("11_RUN01_LM16-133_NT5054.xlsx", "22_run03_LM16-135_NT5054.xlsx", "33_RuN02_LM16-134_NT5054.xlsx")
+# sort_filenames_by_run(filelist)

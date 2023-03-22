@@ -82,8 +82,8 @@ extdata = system.file("extdata", package = "neckaR")
 data_dir = file.path(extdata, "Bovatus")
 
 # List raw plate reader files
-Raw_Data_files = list.files(data_dir, pattern = "RUN") %>% 
-	Sort_by_run()
+Raw_Data_files = list.files(data_dir, pattern = "RUN", ignore.case = TRUE) %>%
+	Sort_by_run(.)
 
 # Tab1
 Runs = file.path(data_dir, "Tab1.xlsx")
