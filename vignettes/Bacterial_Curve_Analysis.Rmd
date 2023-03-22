@@ -42,9 +42,8 @@ The present example makes heavy use of packages from the `tidyverse`. You don't
 need the complete `tidyverse` suite installed; most of the required packages were
 installed together with `neckaR`, though for this example we will use many functions
 from a couple packages in particular: `dplyr` (for the manipulation of the tables
-and data), `conflicted` (to solve possible conflicts in function assignations),
-and `ggplot2` to generate plots. Finally, we will also use the `readxl` package, 
-which you should also already have.
+and data) and `ggplot2` to generate plots. Finally, we will also use the `readxl`
+package, which you should also already have.
 ```{r}
 # R functions
 library(neckaR)
@@ -67,9 +66,15 @@ distributed across multiple tables that should be created beforehand.
   units correspond to the column (01 to 12). For example, position `211` is well `B11`.
   
 * **Raw measurements** that come straight out of the plate reader. Usually in 
-  Microsoft Excel files.
+  Microsoft Excel files. 
   
-  We can specify the location of the files.
+  
+**Note** that the functions of `neckaR` assume that the Runs file are sorted
+by run and by plate, which you can verify when you construct this file using
+a spreadsheet program. Likewise, the raw measurement files should contain the 
+run number in the ID and this vector should be in run order; to facilitate
+sorting the file names, the `Sort_by_run()` function is available.
+
 
 ```{r}
 # List file locations
@@ -77,7 +82,8 @@ extdata = system.file("extdata", package = "neckaR")
 data_dir = file.path(extdata, "Bovatus")
 
 # List raw plate reader files
-Raw_Data_files = list.files(data_dir, pattern = "RUN")
+Raw_Data_files = list.files(data_dir, pattern = "RUN") %>% 
+	Sort_by_run()
 
 # Tab1
 Runs = file.path(data_dir, "Tab1.xlsx")
