@@ -10,6 +10,7 @@ Make_cutoff_plots(
   plots_dir = NA,
   vline = "cutoff",
   scales = "fixed",
+  y_limit = c(0, 1),
   plot_name = "Control_cutoff"
 )
 }
@@ -26,6 +27,8 @@ One of "cutoff" (Default): end of exponential phase, "lag": end of lag
 phase, or "both".}
 
 \item{scales}{Should scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y")?}
+
+\item{y_limit}{Vector of y-axis limits}
 
 \item{plot_name}{Name of file to be written}
 }

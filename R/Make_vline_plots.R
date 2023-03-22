@@ -13,6 +13,7 @@
 #' phase, or "both".
 #' @param scales Should scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y")?
 #' @param plot_name Name of file to be written
+#' @param y_limit Vector of y-axis limits
 #' @return A single ggplot2 plot of raw OD over time of control curves, faceted
 #' by `RRPP` (Run and Plate identifier) with vertical lines indicating end
 #' of lag or exponential phases.
@@ -20,13 +21,14 @@
 #' @export
 Make_cutoff_plots = function(curves_df, save_plots = FALSE,
                              plots_dir = NA, vline = "cutoff",
-                             scales = "fixed", plot_name = "Control_cutoff"){
+                             scales = "fixed", y_limit = c(0,1),
+														 plot_name = "Control_cutoff"){
 
   cutoff_plot = curves_df %>%
     dplyr::filter(Control == TRUE) %>%
     ggplot2::ggplot(aes(Time, OD, group = Position)) +
     ggplot2::geom_line(alpha = 0.5) +
-    ggplot2::coord_cartesian(ylim = c(0,1)) +
+    ggplot2::coord_cartesian(ylim = y_limit) +
     ggplot2::facet_wrap(~RRPP, scales = scales) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::theme_light()
