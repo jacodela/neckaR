@@ -18,8 +18,9 @@ knitr::opts_chunk$set(
 Jacobo de la Cuesta-Zuluaga. January 2023.
 
 This notebook is a broad introduction to the `neckaR` package of R for the analysis
-of bacterial growth curves. In addition, it also accompanies the article *TBD* by
-Fulano et al. (202X).
+of bacterial growth curves. In addition, it also accompanies the article
+*High-Throughput Screening Strategies for the Identification of Active Compounds against Gut Bacteria*
+by Müller, de la Cuesta Zuluaga et al (2023).
 
 # Introduction to the data and the analysis
 

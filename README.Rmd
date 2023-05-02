@@ -44,7 +44,7 @@ You can install the development version of neckaR from [GitHub](https://github.c
 
 ```{r eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("jacodela/neckaR")
+devtools::install_github("Lisa-Maier-Lab/neckaR")
 ```
 
 ## Usage

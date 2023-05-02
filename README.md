@@ -36,7 +36,7 @@ You can install the development version of neckaR from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jacodela/neckaR")
+devtools::install_github("Lisa-Maier-Lab/neckaR")
 ```
 
 ## Usage
