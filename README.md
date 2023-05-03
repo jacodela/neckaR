@@ -31,7 +31,7 @@ paper:
 
 ## Installation
 
-You can install the development version of neckaR from
+You can install the development version of `neckaR` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -57,8 +57,10 @@ help(package="neckaR")
 
 ## Help & Contributing
 
-If you have questions or come across a bug, you can [create a new issue
-here](https://github.com/jacodela/neckaR/issues).
+`neckaR` is under active development, so user beware. Precisely because
+of that, we rely you, the user, to point us towards things we can
+improve. If you have questions or come across a bug, you can [create a
+new issue here](https://github.com/jacodela/neckaR/issues).
 
 ## Why neckaR?
 

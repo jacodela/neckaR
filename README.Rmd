@@ -40,7 +40,7 @@ The functions contained in `neckaR` are based on the code used in the paper:
 
 ## Installation
 
-You can install the development version of neckaR from [GitHub](https://github.com/) with:
+You can install the development version of `neckaR` from [GitHub](https://github.com/) with:
 
 ```{r eval = FALSE}
 # install.packages("devtools")
@@ -59,6 +59,8 @@ help(package="neckaR")
 ```
 
 ## Help & Contributing
+`neckaR` is under active development, so user beware. Precisely because of that,
+we rely you, the user, to point us towards things we can improve. 
 If you have questions or come across a bug, you can 
 [create a new issue here](https://github.com/jacodela/neckaR/issues).
 

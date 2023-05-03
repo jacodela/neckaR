@@ -349,6 +349,12 @@ marked_df = Mark_artefacts(adjusted_df,
                            p_delta2 = 1e-3)
 ```
 
+*Note* that you will get warnings about `NaN` values being produced. Don't worry,
+this is to be expected: the detection of anomalous deltas depends on the comparison
+of two adjacent points. Since there is no time -1, the initial time point will be 
+`NaN` for each of the curves. Likewise, the delta2 depends on two adjacent deltas, 
+therefore there will be `NaN` for the two first time points
+
 We can then plot the curves that were marked
 ```{r}
 # Plot marked curves
