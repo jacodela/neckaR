@@ -12,7 +12,7 @@
 Detect_MIC_single <- function(curves_df, threshold = 0.75, concentration_var = Concentration) {
 	less_equal_df = curves_df %>%
 		dplyr::mutate(equal_min_con = {{concentration_var}} <= min({{concentration_var}})) %>%
-		dplyr::filter(normAUCmon <= 0.75) %>%
+		dplyr::filter(normAUCmon <= threshold) %>%
 		dplyr::slice(1) %>%
 		dplyr::ungroup() %>%
 		dplyr::mutate(qual = dplyr::if_else(equal_min_con == TRUE, "<", "=")) %>%
@@ -20,7 +20,7 @@ Detect_MIC_single <- function(curves_df, threshold = 0.75, concentration_var = C
 
 	greater_df = curves_df %>%
 		dplyr::mutate(equal_max_con = Concentration >= max({{concentration_var}})) %>%
-		dplyr::filter(normAUCmon > 0.75 & equal_max_con == TRUE) %>%
+		dplyr::filter(normAUCmon > threshold & equal_max_con == TRUE) %>%
 		dplyr::ungroup() %>%
 		dplyr::mutate(qual = ">") %>%
 		dplyr::select(qual, {{concentration_var}})
