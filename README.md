@@ -20,9 +20,9 @@ used by the Maier Lab at the University of Tübingen, Germany.
 
 If you use `neckaR`, please cite
 
-> Müller P., de la Cuesta-Zuluaga J., et al.  High-Throughput Screening
+> Müller P., de la Cuesta-Zuluaga J. et al.  High-Throughput Screening
 > Strategies for the Identification of Active Compounds against Gut
-> Bacteria. (2023)
+> Bacteria. (2023).
 
 The functions contained in `neckaR` are based on the code used in the
 paper:
@@ -57,6 +57,10 @@ devtools::install_github("Lisa-Maier-Lab/neckaR",
                                                  build_vignettes = TRUE, 
                                                  force = TRUE)
 ```
+
+A fresh installation of `neckaR` and its dependencies should take
+approximately 3 to 5 minutes, depending on the internet connection and
+the computer of the user.
 
 ### Dependencies
 
