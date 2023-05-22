@@ -45,6 +45,7 @@ installed together with `neckaR`, though for this example we will use many funct
 from a couple packages in particular: `dplyr` (for the manipulation of the tables
 and data) and `ggplot2` to generate plots. Finally, we will also use the `readxl`
 package, which you should also already have.
+
 ```{r}
 # R functions
 library(neckaR)
@@ -547,3 +548,4 @@ final_df %>%
 ```{r}
 sessionInfo()
 ```
+

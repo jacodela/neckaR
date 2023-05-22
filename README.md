@@ -102,6 +102,12 @@ by typing:
 vignette("Bacterial_Curve_Analysis", package="neckaR")
 ```
 
+The execution of the complete vignette should take approximately 5
+minutes, though the functions within the `neckaR` package are thought to
+be executed interactively, that it, the user is encouraged to verify the
+results of the intermediate steps and to adjust the parameters of the
+steps accordingly.
+
 For a comprehensive list of functions, you can explore the reference
 documentation:
 
