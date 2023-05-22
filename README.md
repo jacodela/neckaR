@@ -20,7 +20,9 @@ used by the Maier Lab at the University of Tübingen, Germany.
 
 If you use `neckaR`, please cite
 
-> Citation needed
+> Müller P., de la Cuesta-Zuluaga J., et al.  High-Throughput Screening
+> Strategies for the Identification of Active Compounds against Gut
+> Bacteria. (2023)
 
 The functions contained in `neckaR` are based on the code used in the
 paper:
@@ -29,17 +31,62 @@ paper:
 > non-antibiotic drugs on human gut bacteria. Nature 555, 623–628
 > (2018). <https://doi.org/10.1038/nature25979>
 
+# System Requirements
+
+## Hardware requirements
+
+The `neckaR` package requires only a standard personal computer with at
+least 8 GB RAM to support the in-memory operations.
+
+## Software requirements
+
+### OS Requirements
+
+The package has been tested on the following operating systems: \*
+Windows 10 \* macOS Ventura 13.3.1 \* Linux Ubuntu 20.04
+
 ## Installation
 
 You can install the development version of `neckaR` from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("Lisa-Maier-Lab/neckaR")
+# install neckaR with the vignettes
+install.packages("devtools")
+devtools::install_github("Lisa-Maier-Lab/neckaR",  
+                                                 build_vignettes = TRUE, 
+                                                 force = TRUE)
 ```
 
-## Usage
+### Dependencies
+
+The `neckaR` package depends on the following libraries:
+
+    dplyr,
+    tidyr,
+    tibble,
+    stringr,
+    ggplot2,
+    purrr,
+    vctrs,
+    fitdistrplus,
+    readxl,
+    magrittr,
+    rlang,
+    grDevices,
+    stats,
+    data.table
+
+These dependencies should be installed together with `neckaR`; if this
+is not the case, users can manually install them with the following
+command:
+
+``` r
+install.packages(c("dplyr", "tidyr", "tibble", "stringr", "ggplot2", "purrr", "vctrs", 
+    "fitdistrplus", "readxl", "magrittr", "rlang", "grDevices", "stats", "data.table"))
+```
+
+# Usage
 
 You can check out the introductory vignette for a quick start tutorial
 by typing:
@@ -55,14 +102,14 @@ documentation:
 help(package="neckaR")
 ```
 
-## Help & Contributing
+# Help & Contributing
 
 `neckaR` is under active development, so user beware. Precisely because
 of that, we rely you, the user, to point us towards things we can
 improve. If you have questions or come across a bug, you can [create a
 new issue here](https://github.com/jacodela/neckaR/issues).
 
-## Why neckaR?
+# Why neckaR?
 
 [The Neckar](https://en.wikipedia.org/wiki/Neckar) is a river that flows
 through the state of Baden-Württemberg, in the southwest of Germany. On
