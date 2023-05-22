@@ -42,8 +42,11 @@ least 8 GB RAM to support the in-memory operations.
 
 ### OS Requirements
 
-The package has been tested on the following operating systems: \*
-Windows 10 \* macOS Ventura 13.3.1 \* Linux Ubuntu 20.04
+The package has been tested on the following operating systems:
+
+- Windows 10
+- macOS Ventura 13.3.1
+- Linux Ubuntu 20.04
 
 ## Installation
 
@@ -53,9 +56,9 @@ You can install the development version of `neckaR` from
 ``` r
 # install neckaR with the vignettes
 install.packages("devtools")
-devtools::install_github("Lisa-Maier-Lab/neckaR",  
-                                                 build_vignettes = TRUE, 
-                                                 force = TRUE)
+devtools::install_github("Lisa-Maier-Lab/neckaR", 
+    build_vignettes = TRUE, 
+    force = TRUE)
 ```
 
 A fresh installation of `neckaR` and its dependencies should take

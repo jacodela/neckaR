@@ -47,6 +47,7 @@ The `neckaR` package requires only a standard personal computer with at least
 ## Software requirements
 ### OS Requirements
 The package has been tested on the following operating systems:
+
 * Windows 10
 * macOS Ventura 13.3.1
 * Linux Ubuntu 20.04
@@ -55,12 +56,12 @@ The package has been tested on the following operating systems:
 
 You can install the development version of `neckaR` from [GitHub](https://github.com/) with:
 
-```{r eval = FALSE}
+```r
 # install neckaR with the vignettes
 install.packages("devtools")
-devtools::install_github("Lisa-Maier-Lab/neckaR",  
-												 build_vignettes = TRUE, 
-												 force = TRUE)
+devtools::install_github("Lisa-Maier-Lab/neckaR", 
+	build_vignettes = TRUE, 
+	force = TRUE)
 ```
 
 A fresh installation of `neckaR` and its dependencies should take approximately 3 to 5 minutes, depending on the internet connection and the computer of the user.
