@@ -6,11 +6,18 @@
 #' @param save_plots Should plots saved as files?
 #' @param plots_dir Path to folder where plots will be saved.
 #' @param replicate_variable Name of column containing replicate experiment number
+#' @param y_limit Vector of y-axis limits
 #' @return A list of ggplot2 plots of OD over time. Each plot contains all the
 #' curves from a given run-plate-strain-biological replicate combination, with
 #' curves marked as abnormal highlighted.
 #' @export
-Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA){
+Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA, y_limit = c(0.0001,1)){
+	# Just for plot
+	# make negative values = 0
+	curves_df %>%
+		dplyr::mutate(ODc01 = dplyr::if_else(ODc01 <= 0,0, ODc01))
+
+
   # Split master data frame into individual dfs
   # Should the data be split by replicate?
   if(is.na(replicate_variable)){
@@ -22,6 +29,8 @@ Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, rep
       dplyr::rename(".rep" = replicate_variable) %>%
       dplyr::group_split(Run, Plate, Strain, .rep)
   }
+
+
 
   # # Iterate over each df
   Plot_list = purrr::map(split_df, function(df){
@@ -43,7 +52,10 @@ Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, rep
       ggplot2::geom_line(data = df, color = "grey",  alpha = 0.25) +
       ggplot2::geom_line(data = dplyr::filter(df, discard_conc), color = 'red', size = 1) +
       ggplot2::scale_x_continuous(expand=c(0, 2)) +
+    	ggplot2::scale_y_continuous(trans = "log10",  limits = y_limit, expand = c(0.05, 0.05)) +
+    	ggplot2::annotation_logticks(base = 10, sides = "l") +
       ggplot2::theme_light() +
+    	ggplot2::theme(panel.grid.minor = ggplot2::element_blank()) +
       ggplot2::labs(title = Plot_title)
 
 

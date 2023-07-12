@@ -8,7 +8,8 @@ Make_curve_plots(
   curves_df,
   save_plots = FALSE,
   plots_dir = NA,
-  replicate_variable = NA
+  replicate_variable = NA,
+  y_limit = c(0.1, 1)
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ Runs and Layout data.}
 \item{plots_dir}{Path to folder where plots will be saved.}
 
 \item{replicate_variable}{Name of column containing replicate experiment number}
+
+\item{y_limit}{Vector of y-axis limits}
 }
 \value{
 A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biological

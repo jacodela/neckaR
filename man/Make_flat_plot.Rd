@@ -8,7 +8,8 @@ Make_flat_plot(
   curves_df,
   save_plots = FALSE,
   plots_dir = NA,
-  replicate_variable = NA
+  replicate_variable = NA,
+  y_limit = c(1e-04, 1)
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ curve was marked as flat.}
 \item{plots_dir}{Path to folder where plots will be saved.}
 
 \item{replicate_variable}{Name of column containing replicate experiment number}
+
+\item{y_limit}{Vector of y-axis limits}
 }
 \value{
 A list of ggplot2 plots of OD over time. Each plot contains all the

@@ -21,16 +21,19 @@
 #' @export
 Make_cutoff_plots = function(curves_df, save_plots = FALSE,
                              plots_dir = NA, vline = "cutoff",
-                             scales = "fixed", y_limit = c(0,1),
+                             scales = "fixed", y_limit = c(0.1,1),
 														 plot_name = "Control_cutoff"){
 
   cutoff_plot = curves_df %>%
     dplyr::filter(Control == TRUE) %>%
     ggplot2::ggplot(aes(Time, OD, group = Position)) +
     ggplot2::geom_line(alpha = 0.5) +
-    ggplot2::coord_cartesian(ylim = y_limit) +
+    # ggplot2::coord_cartesian(ylim = y_limit) +
+  	ggplot2::scale_y_continuous(trans = "log10",  limits = y_limit, expand = c(0.05, 0.05)) +
+  	ggplot2::annotation_logticks(base = 10, sides = "l") +
     ggplot2::facet_wrap(~RRPP, scales = scales) +
-    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme(legend.position = "none",
+    							 panel.grid.minor = ggplot2::element_blank()) +
     ggplot2::theme_light()
 
   # Which line to plot

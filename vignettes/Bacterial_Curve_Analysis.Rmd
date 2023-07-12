@@ -175,6 +175,12 @@ Otherwise, the function will fail.
 Likewise, this (among other functions) provide the option of adding a replicate
 variable to be used for grouping, plotting and labeling. You can specify it by
 including the name of the column in the `replicate_vaiable` parameter.
+
+**Note** that the Y-axis is plotted in log10 scale, though the values are
+the OD values, not the log-transformed values. This makes it easier to see
+whether there is an exponential growth phase, while also allowing to visualize 
+the actual OD values measured.
+
 ```{r}
 # Plot raw curves
 Master_plots = Make_curve_plots(master_df, 
@@ -227,7 +233,8 @@ To inspect the cut-off times, the `Make_cutoff_plots` function can be used. The
 output plot is faceted by `RRPP`, an identifier for Run and Plate (e.g `110` 
 corresponds to Run `1 `and plate `10`). Each facet in shows the curves 
 corresponding to the controls of a particular plate; the vertical line shows the
-cut-off time identified by the `Adjust_OD` function.
+cut-off time identified by the `Adjust_OD` function. **Note** that the Y-axis is 
+plotted in log10 scale.
 
 Just like the other plotting functions of this package, the plots can be saved
 as `pdf` in an specified directory.
@@ -274,7 +281,7 @@ we will use the `adjusted_df` for the following step.
 ## Plot curves up to cut-off times
 
 After identifying (and optionally adjusting) the cut-off values, we can re-make
-the last plot as follows
+the last plot as follows. **Note** that the Y-axis is plotted in log10 scale.
 
 ```{r}
 # cut all curves at the cut-off
@@ -356,12 +363,14 @@ of two adjacent points. Since there is no time -1, the initial time point will b
 `NaN` for each of the curves. Likewise, the delta2 depends on two adjacent deltas, 
 therefore there will be `NaN` for the two first time points
 
-We can then plot the curves that were marked
+We can then plot the curves that were marked. **Note** that the Y-axis is plotted in 
+log10 scale.
 ```{r}
 # Plot marked curves
 filtered_plots = Make_filtered_plot(marked_df,
-                   save_plots = FALSE,
-                   replicate_variable = "Replicate")
+																		save_plots = FALSE,
+																		replicate_variable = "Replicate",
+																		y_limit = c(0.001, 1))
 
 filtered_plots[1:3]
 ```
