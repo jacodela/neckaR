@@ -53,7 +53,7 @@ Calculate_AUC = function(curves_df){
   ## Recalculate ODc01 after cut-off
   blanked_df = curves_df %>%
   	dplyr::filter(Time < (cutoff_time + 0.5)) %>%
-    dplyr::group_by(RRPP) %>%
+    dplyr::group_by(RRPP, Strain) %>%
     dplyr::mutate(ODc01 = ODc0 / median(ODc0[Time == max(Time) & Control])) %>%
     dplyr::ungroup()
 
@@ -68,7 +68,7 @@ Calculate_AUC = function(curves_df){
   ## curve is scaled to a [0 - 1] range such that a time point with an uncorrected
   ## OD of 1 also had an OD of 1 after correction.
   shifted_scaled_df = blanked_df %>%
-    dplyr::group_by(RRPPRCC) %>%
+    dplyr::group_by(RRPPRCC, Strain) %>%
     dplyr::mutate(ODc01b_shifted = ODc01 - min(ODc01),
     							ODc01b_scaled = (ODc01 - min(ODc01)) / abs(1 - min(ODc01))) %>%
     dplyr::ungroup()
@@ -80,10 +80,10 @@ Calculate_AUC = function(curves_df){
   ##
   ## Next, the value is normalized to the control wells of a given plate and run
   AUCs_df = shifted_scaled_df %>%
-    dplyr::group_by(RRPPRCC, RRPP, Control) %>%
+    dplyr::group_by(RRPPRCC, RRPP, Control, Strain) %>%
     dplyr::summarise(AUC_scaled = Calculate_AUC_single(ODc01b_scaled, Time),
                      AUC_shifted = Calculate_AUC_single(ODc01b_shifted, Time)) %>%
-    dplyr::group_by(RRPP) %>%
+    dplyr::group_by(RRPP, Strain) %>%
     dplyr::mutate(normAUC_scaled = AUC_scaled / median(AUC_scaled[Control]),
                   normAUC_shifted = AUC_shifted / median(AUC_shifted[Control])) %>%
     dplyr::ungroup()
@@ -97,11 +97,11 @@ Calculate_AUC = function(curves_df){
   ## the two areas calculated with the shifted and the re-scaled AUC
   ## Add conditions info
   Norm_AUCs_df = AUCs_df %>%
-    dplyr::left_join(info_df) %>%
+    dplyr::left_join(info_df, by = dplyr::join_by(RRPPRCC, RRPP, Control, Strain)) %>%
     dplyr::mutate(normAUC = dplyr::if_else(abs(normAUC_scaled - 1) < abs(normAUC_shifted - 1),
                                     normAUC_scaled, normAUC_shifted),
                   PP = substr(RRPP, nchar(RRPP) - 1, nchar(RRPP))) %>%
-    dplyr::group_by(RRPPRCC) %>%
+    dplyr::group_by(RRPPRCC, Strain) %>%
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
   	dplyr::relocate(RRPPRCC, normAUC)

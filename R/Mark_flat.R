@@ -66,12 +66,12 @@ Mark_flat_single = function(curves_df, OD_col, OD_diff_cutoff, last_OD){
 #' @return A data frame object with the result of the test of whether the curve
 #' is flat added to the input master data frame.
 #' @export
-Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, group_var = "RRPPRCC", last_OD = 1) {
+Mark_flat = function(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, last_OD = 1) {
 	curves_df %>%
-		dplyr::group_by(!!rlang::sym(group_var)) %>%
+		dplyr::group_by(RRPPRCC, Strain) %>%
 		dplyr::do(Mark_flat_single(.,
 															 OD_col = OD_col,
 															 OD_diff_cutoff = OD_diff_cutoff,
 															 last_OD = last_OD)) %>%
-		dplyr::left_join(curves_df, .)
+		dplyr::left_join(curves_df, ., by = dplyr::join_by(RRPPRCC, Strain))
 }

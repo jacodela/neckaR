@@ -21,31 +21,31 @@ Calculate_lag = function(curves_df, offset_control = 0.02){
 
   cut_off_times = curves_df %>%
     dplyr::filter(Time < cutoff_time) %>%
-    dplyr::select(RRPPRCC, Time, cutoff_time) %>%
+    dplyr::select(RRPPRCC, Time, cutoff_time, Strain) %>%
     dplyr::mutate(Time = round(Time, 1))
 
   curves_df_lag = curves_df %>%
     dplyr::mutate(Time = round(Time, 1)) %>%
-    dplyr::group_by(RRPPRCC, Time) %>%
+    dplyr::group_by(RRPPRCC, Time, Strain) %>%
     dplyr::summarise(OD = median(OD)) %>%
     dplyr::arrange(Time) %>%
-    dplyr::group_by(RRPPRCC) %>%
+    dplyr::group_by(RRPPRCC, Strain) %>%
     dplyr::mutate(OD_adj = OD + OD[dplyr::n()] * offset_control * (Time[dplyr::n()]-Time)) %>%
     dplyr::ungroup()
 
   # # Filter the minimum OD_adj on each curve
   # # # The corresponding time is the end of lag phase
   Lag_times = curves_df_lag %>%
-    dplyr::left_join(cut_off_times, by = c("RRPPRCC", "Time")) %>%
-    dplyr::group_by(RRPPRCC) %>%
+    dplyr::left_join(cut_off_times, by = dplyr::join_by("RRPPRCC", "Time", "Strain")) %>%
+    dplyr::group_by(RRPPRCC, Strain) %>%
     dplyr::filter(Time < cutoff_time) %>%
     dplyr::filter(OD_adj == min(OD_adj)) %>%
     dplyr::mutate(lag_time = round(mean(Time), digits = 1)) %>%
     dplyr::ungroup() %>%
-    dplyr::select(RRPPRCC, lag_time)
+    dplyr::select(RRPPRCC, lag_time, Strain)
 
   # Join raw OD values with time cutoff
-  full_lags = dplyr::left_join(curves_df, Lag_times, by = "RRPPRCC")
+  full_lags = dplyr::left_join(curves_df, Lag_times, dplyr::join_by("RRPPRCC", "Strain"))
 
   # Set lag time of controls within plate and strain equal to median
   control_lags = full_lags %>%
