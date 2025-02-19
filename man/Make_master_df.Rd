@@ -10,7 +10,8 @@ Make_master_df(
   Runs_path,
   Layout_path,
   Duration = 20,
-  Design_tab_col = "Design"
+  Design_tab_col = "Design",
+  Plate_type = "96-well"
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ reader}
 
 \item{Design_tab_col}{Name of column with design information in Runs and
 Layout tables}
+
+\item{Plate_type}{Type of plate. Possible values are "24-well" and "96-well"}
 }
 \value{
 A data frame object that contains the OD measurements from a
@@ -36,9 +39,13 @@ In addition, `Make_master_df()` creates a series of variables to identify
 each curve and each measurement. They are:
 * `ID`: numeric value where the thousands and tens of thousands positions
 correspond to the plate number [1 to # of plates]. Hundreds position is
-the row number [1 to 8]. Tens and units are the columns [01 to 12].
+the row number [1 to 8]. Tens and units are the columns [01 to 12]. In the
+case of 24-well plates, the aforementioned values range from [1 to 4] for
+rows and from [1 to 6] for the columns.
 * `RRPPRCC`: Unique curve identifier, representing
-(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
+(Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12])).
+In the case of 24-well plates, the aforementioned values range from [1 to 4]
+for rows and from [1 to 6] for the columns.
 }
 \description{
 Combines OD measurements with with run and layout information

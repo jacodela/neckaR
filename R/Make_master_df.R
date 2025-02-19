@@ -9,6 +9,7 @@
 #' @param Duration Maximum number of time points measured in the experiment
 #' @param Design_tab_col Name of column with design information in Runs and
 #' Layout tables
+#' @param Plate_type Type of plate. Possible values are "24-well" and "96-well"
 #' @return A data frame object that contains the OD measurements from a
 #' all the plates from all runs included, combined with the Runs and Layout
 #' information. Columns correspond to those included in Runs and Layout tables.
@@ -16,16 +17,21 @@
 #' each curve and each measurement. They are:
 #' * `ID`: numeric value where the thousands and tens of thousands positions
 #' correspond to the plate number [1 to # of plates]. Hundreds position is
-#' the row number [1 to 8]. Tens and units are the columns [01 to 12].
+#' the row number [1 to 8]. Tens and units are the columns [01 to 12]. In the
+#' case of 24-well plates, the aforementioned values range from [1 to 4] for
+#' rows and from [1 to 6] for the columns.
 #' * `RRPPRCC`: Unique curve identifier, representing
-#' (Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12]))
+#' (Run, Run, Plate, Plate, Row (in plate [1 to 8]), Column (in plate [01 to 12])).
+#' In the case of 24-well plates, the aforementioned values range from [1 to 4]
+#' for rows and from [1 to 6] for the columns.
 #' @export
 Make_master_df = function(Data_folder,
 													Data_files,
 													Runs_path,
 													Layout_path,
 													Duration = 20,
-													Design_tab_col = "Design"){
+													Design_tab_col = "Design",
+													Plate_type = "96-well"){
 
 	## Load Runs and Layout files
 	Runs_df = readxl::read_excel(path = Runs_path, sheet = 1)
@@ -59,8 +65,17 @@ Make_master_df = function(Data_folder,
 
 			## Read excel file from each run-Plate combination and modify columns
 			## Combine with layout info from Tab2
-			Read_OD_96(filename = file.path(Data_folder, Data_files[rn]),
-								 sheet = plt, duration = Duration) %>%
+			if(Plate_type == "96-well"){
+				OD_from_excel = Read_OD_96(filename = file.path(Data_folder, Data_files[rn]),
+													 sheet = plt, duration = Duration)
+			} else if (Plate_type == "24-well"){
+				OD_from_excel = Read_OD_24(filename = file.path(Data_folder, Data_files[rn]),
+													 sheet = plt, duration = Duration)
+			} else {
+				warning('Please specify a valid plate type')
+			}
+
+			OD_from_excel %>%
 				dplyr::mutate(RRPPRCC = rn * 100000 + ID, ## Add identifier (Run, Run, Plate, Plate, Row, Column, Column)
 											Position = as.numeric(substr(ID, nchar(ID)-2, nchar(ID)))) %>%
 				dplyr::bind_cols(dplyr::slice(Runs_df, index)) %>%  ## Add corresponding data from Runs table
@@ -68,8 +83,9 @@ Make_master_df = function(Data_folder,
 		}
 		)
 
-	}else
-	{warning('Runs in overview and number of excel files are not matching')}
+	} else {
+		warning('Runs in overview and number of excel files are not matching')
+		}
 
 
 	## Return
