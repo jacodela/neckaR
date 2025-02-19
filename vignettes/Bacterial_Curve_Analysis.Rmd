@@ -442,8 +442,9 @@ Then, we could select curves that contain spikes and remove them.
 ```{r}
 # Curves containing spikes
 discard_spikes = spikes_df %>% 
+	dplyr::group_by(Strain) %>% 
   dplyr::filter(increased == TRUE) %>% 
-  dplyr::select(RRPPRCC) %>% 
+  dplyr::select(RRPPRCC, Strain) %>% 
   dplyr::distinct()
 
 # Remove from analysis
@@ -538,7 +539,7 @@ data frame as follows:
 ```{r}
 # Create df with max OD and cut-off times of each curve
 Max_OD_df = filtered_marked_df %>% 
-	dplyr::group_by(RRPPRCC) %>% 
+	dplyr::group_by(RRPPRCC, Strain) %>% 
 	dplyr::slice(which.min(cutoff_time - Time)) %>% 
 	dplyr::ungroup() %>% 
 	dplyr::select(RRPPRCC, Drug, Drug_name, Replicate, Max_OD = OD, Max_ODc01 = ODc01, cutoff_time, lag_time)  
