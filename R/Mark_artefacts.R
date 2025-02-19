@@ -176,7 +176,7 @@ Mark_artefacts = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
 	GCsf_multistrain = curves_df %>%
 		dplyr::group_split(Strain) %>%
 		purrr::map(function(x){
-			Mark_artefacts_singlestrain(adjusted_df,
+			Mark_artefacts_singlestrain(x,
 																	sum_inc = sum_inc,
 																	increased_sd = increased_sd,
 																	t0_sd = t0_sd,

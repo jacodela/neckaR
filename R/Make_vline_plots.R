@@ -31,7 +31,7 @@ Make_cutoff_plots = function(curves_df, save_plots = FALSE,
     # ggplot2::coord_cartesian(ylim = y_limit) +
   	ggplot2::scale_y_continuous(trans = "log10",  limits = y_limit, expand = c(0.05, 0.05)) +
   	ggplot2::annotation_logticks(base = 10, sides = "l") +
-    ggplot2::facet_wrap(~Strain+RRPP, scales = scales) +
+    ggplot2::facet_wrap(~RRPP+Strain, scales = scales) +
     ggplot2::theme(legend.position = "none",
     							 panel.grid.minor = ggplot2::element_blank()) +
     ggplot2::theme_light()
