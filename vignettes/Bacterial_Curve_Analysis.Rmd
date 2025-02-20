@@ -321,6 +321,13 @@ Then, for each curve, the following possible abnormalities are evaluated:
   of the controls and those that are above a certain number of standard
   deviations (`t0_sd`) will be flagged as abnormal. The value of the SD threshold 
   can be specified by the user. Lower `t0_sd` values make the filtering more strict.
+  Note that the standard deviation is calculated using the data from all strains
+  across all plates. This assumes that you are using the same culture medium for
+  all strains; using different media in the same set of runs can lead to an
+  erroneous calculation of the average OD at time 0. If this is the case, you can 
+  either run the `Mark_artefacts` function on each strain separately by setting the
+  `by_strain` to `TRUE`. Otherwise, you can ignore this criterium when filtering
+  the curves, see the section below.
   
 * **Spike measurements**: certain curves may have an abnormally increased OD in
   the earlier time points that then go down. However, we assume that OD values are
@@ -354,7 +361,8 @@ marked_df = Mark_artefacts(adjusted_df,
                            increased_sd = 2,
                            t0_sd = 3,
                            p_delta = 1e-3,
-                           p_delta2 = 1e-3)
+                           p_delta2 = 1e-3, 
+													 by_strain = FALSE)
 ```
 
 *Note* that you will get warnings about `NaN` values being produced. Don't worry,
