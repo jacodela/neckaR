@@ -21,7 +21,7 @@
 #' @export
 Make_cutoff_plots = function(curves_df, save_plots = FALSE,
                              plots_dir = NA, vline = "cutoff",
-                             scales = "fixed", y_limit = c(0.1,1),
+                             scales = "fixed", y_limit = c(0.1,2),
 														 plot_name = "Control_cutoff"){
 
   cutoff_plot = curves_df %>%

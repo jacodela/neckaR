@@ -9,7 +9,7 @@
 #' @return A single ggplot2 plot of raw OD over time, faceted by run-plate-strain-biological
 #' replicate combination.
 #' @export
-Make_curve_plots = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA, y_limit = c(0.1,1)){
+Make_curve_plots = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA, y_limit = c(0.1,2)){
 
   # Split master data frame into individual dfs
   # Should the data be split by replicate?

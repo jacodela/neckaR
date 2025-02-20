@@ -47,7 +47,7 @@ Adjust_OD = function(curves_df, control_factor, control_level, offset_control){
   ## Determine the cutoff time of each plate of each run
   ## Value is the maximum adjusted OD of control of the plate
   time_cutoffs = GCs_controls %>%
-    dplyr::group_by(RRPP) %>%
+    dplyr::group_by(RRPP, Strain) %>%
     dplyr::filter(ODc0_adj == max(ODc0_adj)) %>%
     dplyr::group_by(RRPP, Strain) %>%
     dplyr::mutate(cutoff_time = round(mean(Time), digits = 0)) %>%
