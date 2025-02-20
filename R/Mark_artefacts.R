@@ -45,17 +45,26 @@
 #' `p_delta2` values make the filtering more lenient, higher values are more strict.
 #' @param curves_df Master data frame containing raw OD measurements and
 #' Runs and Layout data.
-#' @param sum_inc Maximum number of spikes allowed in a given curve. Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make the detection more strict.
-#' @param increased_sd  Number of times the SD of controls at time 0 for the detection of spikes in OD. Smaller values make the detection more strict.
-#' @param t0_sd Number of OD standard deviations of controls at time 0 above which the starting OD of a given curve is marked as abnormal. Smaller values make the detection more strict.
-#' @param p_delta Probability delta values of two consecutive OD measurements equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
-#' @param p_delta2 Probability delta values of two consecutive delta values equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
+#' @param sum_inc Maximum number of spikes allowed in a given curve.
+#' Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make
+#' the detection more strict.
+#' @param increased_sd  Number of times the SD of controls at time 0 for the
+#' detection of spikes in OD. Smaller values make the detection more strict.
+#' @param t0_sd Number of OD standard deviations of controls at time 0 above
+#' which the starting OD of a given curve is marked as abnormal. Smaller values
+#' make the detection more strict.
+#' @param p_delta Probability delta values of two consecutive OD measurements
+#' equal to or greater than the observed according to an exponential distribution.
+#'  Higher values make the detection more strict.
+#' @param p_delta2 Probability delta values of two consecutive delta values equal
+#'  to or greater than the observed according to an exponential distribution.
+#'  Higher values make the detection more strict.
 #' @return A data frame object with the normalized OD, the result of each of the
 #' tests and whether a given curve is marked as abnormal to the input master
 #' data frame.
 #' @export
-Mark_artefacts_singlestrain = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
-																			 p_delta = 1e-3, p_delta2 = 1e-3) {
+Mark_artefacts_combined = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
+																	 p_delta = 1e-3, p_delta2 = 1e-3) {
 
 	## Determine if a given time point is below the cutoff time
 	## and truncate curves at cutoff
@@ -69,7 +78,7 @@ Mark_artefacts_singlestrain = function(curves_df, sum_inc = 3, increased_sd = 2,
 	## value of 1 represents the “maximum growth” observed in the plate, where 0 is no growth
 
 	GCsf_B = GCsf_A %>%
-		dplyr::group_by(RRPP) %>%
+		dplyr::group_by(RRPP, Strain) %>%
 		dplyr::mutate(ODc01 = ODc0 / median(ODc0[ Time == max(Time[leq_cutoff]) & Control ])) %>%
 		dplyr::relocate(ODc01) %>%
 		dplyr::ungroup()
@@ -88,7 +97,7 @@ Mark_artefacts_singlestrain = function(curves_df, sum_inc = 3, increased_sd = 2,
 
 
 	GCsf_C = GCsf_B %>%
-		dplyr::group_by(RRPPRCC) %>%
+		dplyr::group_by(RRPPRCC, Strain) %>%
 		dplyr::mutate(delta = ODc0 - c(NA, ODc0[1:(dplyr::n()-1)])) %>% # Delta equals ODc0_time(n) - ODc0_time(n-1)
 		dplyr::mutate(delta2 = delta - c(NA, delta[1:(dplyr::n()-1)])) %>% # Delta2 equals Delta_time(n) - Delta_time(n-1)
 		dplyr::group_by(Strain) %>%
@@ -97,7 +106,7 @@ Mark_artefacts_singlestrain = function(curves_df, sum_inc = 3, increased_sd = 2,
 
 
 	GCsf_D = GCsf_C %>%
-		dplyr::group_by(RRPPRCC) %>%
+		dplyr::group_by(RRPPRCC, Strain) %>%
 		dplyr::mutate(increased = (ODc01 > (increased_sd * sd_control_start_OD + cumulmin(ODc01))) & (Time < max(Time[leq_cutoff])/2),
 									# sum_inc = sum(increased),
 									is_increased = (sum(increased) > sum_inc),
@@ -158,33 +167,53 @@ Mark_artefacts_singlestrain = function(curves_df, sum_inc = 3, increased_sd = 2,
 #' `p_delta2` values make the filtering more lenient, higher values are more strict.
 #' @param curves_df Master data frame containing raw OD measurements and
 #' Runs and Layout data.
-#' @param sum_inc Maximum number of spikes allowed in a given curve. Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make the detection more strict.
-#' @param increased_sd  Number of times the SD of controls at time 0 for the detection of spikes in OD. Smaller values make the detection more strict.
-#' @param t0_sd Number of OD standard deviations of controls at time 0 above which the starting OD of a given curve is marked as abnormal. Smaller values make the detection more strict.
-#' @param p_delta Probability delta values of two consecutive OD measurements equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
-#' @param p_delta2 Probability delta values of two consecutive delta values equal to or greater than the observed according to an exponential distribution. Higher values make the detection more strict.
+#' @param sum_inc Maximum number of spikes allowed in a given curve.
+#' Curves with >= `sum_inc` spikes are marked as abnormal. Smaller values make
+#' the detection more strict.
+#' @param increased_sd  Number of times the SD of controls at time 0 for the
+#'  detection of spikes in OD. Smaller values make the detection more strict.
+#' @param t0_sd Number of OD standard deviations of controls at time 0 above
+#' which the starting OD of a given curve is marked as abnormal. Smaller values
+#'  make the detection more strict.
+#' @param p_delta Probability delta values of two consecutive OD measurements
+#' equal to or greater than the observed according to an exponential distribution
+#' . Higher values make the detection more strict.
+#' @param p_delta2 Probability delta values of two consecutive delta values equal
+#'  to or greater than the observed according to an exponential distribution.
+#'  Higher values make the detection more strict.
 #' @return A data frame object with the normalized OD, the result of each of the
 #' tests and whether a given curve is marked as abnormal to the input master
 #' data frame.
 #' @export
 Mark_artefacts = function(curves_df, sum_inc = 3, increased_sd = 2, t0_sd = 3,
-													p_delta = 1e-3, p_delta2 = 1e-3) {
+													p_delta = 1e-3, p_delta2 = 1e-3, by_strain = FALSE) {
 
-	# Splits curves_df by strain
-	# Marks artefacts on each subtable separately
-	# Joins results on single df
-	GCsf_multistrain = curves_df %>%
-		dplyr::group_split(Strain) %>%
-		purrr::map(function(x){
-			Mark_artefacts_singlestrain(x,
-																	sum_inc = sum_inc,
-																	increased_sd = increased_sd,
-																	t0_sd = t0_sd,
-																	p_delta = p_delta,
-																	p_delta2 = p_delta2)
-		}) %>%
-		purrr::list_rbind()
+	if(by_strain == TRUE){
+		# Splits curves_df by strain
+		# Marks artefacts on each subtable separately
+		# Joins results on single df
+		GCsf_marked = curves_df %>%
+			dplyr::group_split(Strain) %>%
+			purrr::map(function(x){
+				Mark_artefacts_combined(x,
+																sum_inc = sum_inc,
+																increased_sd = increased_sd,
+																t0_sd = t0_sd,
+																p_delta = p_delta,
+																p_delta2 = p_delta2)
+			}) %>%
+			purrr::list_rbind()
+
+	} else {
+		# Run combining all the available data
+		GCsf_marked =  Mark_artefacts_combined(curves_df,
+																					 sum_inc = sum_inc,
+																					 increased_sd = increased_sd,
+																					 t0_sd = t0_sd,
+																					 p_delta = p_delta,
+																					 p_delta2 = p_delta2)
+	}
+
 	# Return
-	GCsf_multistrain
-
+	GCsf_marked
 }

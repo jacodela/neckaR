@@ -60,7 +60,7 @@ Detect_MIC = function(curves_df, threshold, group_var, control_var = Control, AU
 		dplyr::arrange({{concentration_var}}) %>%
 		dplyr::mutate(normAUCmon = cumulmax(normAUC_med)) %>%
 		dplyr::ungroup()
-	medianAUCs_B
+	# medianAUCs_B
 
 	# Calculate MIC per group
 	MICs = medianAUCs_B %>%
