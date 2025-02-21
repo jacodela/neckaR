@@ -247,29 +247,37 @@ cutoff_plot
 ```
 
 ## Adjust cut off values
-We can manually check which Run/Plate combinations have a cut-off time below 
-(or above) a certain value:
+We can check which Run/Plate combinations have a cut-off time below 
+a certain value using the function `Check_cutoff`. In addition to the values
+we specify, it automatically determines whether there are cut-off values below
+3 h, which can result in errors in downstream steps. For example, we can check
+the curves with a cut-off below 12 h as follows:
 ```{r}
 # Cut-off values of 12 or less
-adjusted_df %>% 
-  dplyr::filter(Control== TRUE, cutoff_time <= 12) %>% 
-  dplyr::count(RRPP) %>% 
-  dplyr::select(-n)
+Check_cutoff(adjusted_df, inspect_values = c(12))
 ```
 
 After visually inspecting the plots, we could change some of the cut-off values
 manually in case the automatic method failed. For this, we can use the `Fix_cutoff`
 function. The input of this function is the adjusted data frame and a list
-of vectors. The list of vectors are pairs of values corresponding to the `RRPP`
-we would want to change and the new `cutoff_time`.
+of lists. Each of the lists should include the corresponding to the `RRPP` we
+would want to change, the new `cutoff_time`, and the name of the strain.
 
-For example, we could change the times of `RRPP` 306 from 13 to 11 h.
+In addition, if some of your curves had a cutoff value of 0, the calculation of
+lag time will fail. We can recalculate the lag time after manually adjusting the
+cutoff values as well.
+
+For example, we could change the times of `RRPP` 306 from 13 to 11 h and recalculate
+the end of lag phase as follows:
 ```{r}
 # Create list
-replace_values = list(c(306, 11))
+replace_values = list(list(306, 11, "NT5054"))
 
 # replace values
-readjusted_df = Fix_cutoff(adjusted_df, replace_values)
+# remove lag time column and re-execute `Calculate_lag` function
+readjusted_df = Fix_cutoff(adjusted_df, replace_values) %>% 
+	dplyr::select(-lag_time) %>% 
+  Calculate_lag(offset_control = 0.02)
 
 readjusted_df %>% 
   dplyr::filter(RRPP == 306)

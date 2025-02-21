@@ -11,18 +11,27 @@
 #' @export
 Fix_cutoff = function(curves_df, RRPPs_cutoff){
 
-  # Create out df from input df
-  df_new = curves_df
+	# Create out df from input df
+	df_new = curves_df
 
-  # Iterate over each element of list of RRPP/New time pairs
-  for(i in 1:length((RRPPs_cutoff))){
-    RRPP_index = RRPPs_cutoff[[i]][1]
-    new_time =  RRPPs_cutoff[[i]][2]
+	# Iterate over each element of list of RRPP/New time pairs
+	for(i in 1:length((RRPPs_cutoff))){
+		RRPP_index = RRPPs_cutoff[[i]][[1]]
+		new_time =  RRPPs_cutoff[[i]][[2]]
+		strain_name = RRPPs_cutoff[[i]][[3]]
 
-    # Replace values
-    df_new = df_new %>%
-      dplyr::mutate(cutoff_time = dplyr::if_else(RRPP == RRPP_index, new_time, cutoff_time))
-  }
-  # Return
-  df_new
+		# If strain name is not provided, replace values only by run, plate
+		if(is.na(strain_name)){
+			# Replace values
+			df_new = df_new %>%
+				dplyr::mutate(cutoff_time = dplyr::if_else(RRPP == RRPP_index, new_time, cutoff_time))
+		}
+		else {
+			# If strain name is provided, filter replace values by run, plate and strain
+			df_new = df_new %>%
+				dplyr::mutate(cutoff_time = dplyr::if_else((RRPP == RRPP_index & Strain == strain_name), new_time, cutoff_time))
+		}
+	}
+	# Return
+	df_new
 }
