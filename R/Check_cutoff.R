@@ -10,17 +10,17 @@
 #' @return A data frame containing distinct rows of curves that either have
 #' cutoff times less than 3 hours or match the user-specified cutoff values.
 #' @export
-Check_cutoff = function(curves_df, inspect_values = NaN) {
+Check_cutoff = function(curves_df, inspect_value = NaN) {
 	# Check values below 3
 	# which give error in the Mark_artifacts function
 	minimum_co_df = curves_df %>%
-		dplyr::filter(Control == TRUE, cutoff_time < 3) %>%
+		dplyr::filter(Control == TRUE, cutoff_time <=2) %>%
 		dplyr::select(RRPP, Strain, cutoff_time) %>%
 		dplyr::distinct()
 
 	# User, specified cutoff values
 	specified_co_df = curves_df %>%
-		dplyr::filter(Control == TRUE, cutoff_time %in% inspect_values) %>%
+		dplyr::filter(Control == TRUE, cutoff_time <= inspect_value) %>%
 		dplyr::select(RRPP, Strain, cutoff_time) %>%
 		dplyr::distinct()
 
@@ -30,7 +30,8 @@ Check_cutoff = function(curves_df, inspect_values = NaN) {
 	}
 
 	check_df = dplyr::bind_rows(minimum_co_df, specified_co_df) %>%
-		dplyr::distinct()
+		dplyr::distinct() %>%
+		dplyr::arrange(cutoff_time)
 
 	# Return
 	check_df

@@ -14,7 +14,7 @@
 Make_filtered_plot = function(curves_df, save_plots = FALSE, plots_dir = NA, replicate_variable = NA, y_limit = c(0.0001,1)){
 	# Just for plot
 	# make negative values = 0
-	curves_df %>%
+	curves_df = curves_df %>%
 		dplyr::mutate(ODc01 = dplyr::if_else(ODc01 <= 0,0, ODc01))
 
 

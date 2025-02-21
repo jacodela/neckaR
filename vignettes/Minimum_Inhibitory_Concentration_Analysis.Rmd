@@ -112,22 +112,22 @@ We can manually adjust the cut-off values in case we're not satisfied with
 the ones automatically detected by the functions.
 ```{r}
 # Create list of values to replace
-replace_values = list(c(210, 10),
-											c(201, 7),
-											c(209, 6),
-											c(701, 10),
-											c(403, 10))
+replace_values = list(list(210, 10, "ML0102"),
+											list(201, 7, "OKA5073"),
+											list(209, 6, "ML0056"),
+											list(701, 10, "ML0102"),
+											list(403, 5, "ML0056"))
 
 # replace values
 MIC_readjusted_df = Fix_cutoff(MIC_adjusted_df,
-															 replace_values)
+															 replace_values) 
 ```
 
 ## Plot curves up to cut-off times
 ```{r}
 # cut all curves at the cut-off
 # Note that this is used only for plotting
-MIC_cutoff_df = MIC_adjusted_df %>% 
+MIC_cutoff_df = MIC_readjusted_df %>% 
 	dplyr::filter(Time < (cutoff_time + 0.5)) %>%
 	dplyr::arrange(Time)
 
