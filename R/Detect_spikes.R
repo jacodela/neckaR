@@ -22,7 +22,7 @@ Detect_spikes = function(curves_df, offset_control = 0){
 
   ## Create data frame with the ODc0 values of t0 and lag time of each curve
   lag_ODs_df = curves_df %>%
-    dplyr::group_by(RRPPRCC) %>%
+    dplyr::group_by(RRPPRCC, Strain) %>%
     dplyr::filter(lag_time == floor(Time) | Time < 1) %>%
     dplyr::select(RRPPRCC, ODc0, Time) %>%
     dplyr::mutate(tmp_OD = dplyr::row_number(Time),
