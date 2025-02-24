@@ -10,7 +10,7 @@ Make_cutoff_plots(
   plots_dir = NA,
   vline = "cutoff",
   scales = "fixed",
-  y_limit = c(0.1, 1),
+  y_limit = c(0.1, 2),
   plot_name = "Control_cutoff"
 )
 }

@@ -4,13 +4,7 @@
 \alias{Mark_flat}
 \title{Mark_flat}
 \usage{
-Mark_flat(
-  curves_df,
-  OD_col = "ODc01",
-  OD_diff_cutoff = 0.2,
-  group_var = "RRPPRCC",
-  last_OD = 1
-)
+Mark_flat(curves_df, OD_col = "ODc01", OD_diff_cutoff = 0.2, last_OD = 1)
 }
 \arguments{
 \item{curves_df}{Master data frame containing adjusted OD measurements and
@@ -24,10 +18,10 @@ growth curve and and the first measurement. If this value is  below a user-defin
 threshold, the curve will be flagged as flat. Smaller values make the marking
 more strict.}
 
-\item{group_var}{Name of variable to be used for grouping before checking if curve is flat.}
-
 \item{last_OD}{Minimum OD value that a curve should reach in last measurement
 so that the 'flat' label is removed. Smaller values make the marking more strict.}
+
+\item{group_var}{Name of variable to be used for grouping before checking if curve is flat.}
 }
 \value{
 A data frame object with the result of the test of whether the curve

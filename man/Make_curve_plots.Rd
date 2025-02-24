@@ -9,7 +9,7 @@ Make_curve_plots(
   save_plots = FALSE,
   plots_dir = NA,
   replicate_variable = NA,
-  y_limit = c(0.1, 1)
+  y_limit = c(0.1, 2)
 )
 }
 \arguments{
