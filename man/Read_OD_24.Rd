@@ -12,7 +12,8 @@ TECAN plate reader}
 
 \item{sheet}{Number of sheet to be read from Excel}
 
-\item{duration}{Maximum number of time points measured in the experiment}
+\item{duration}{Number of time points measured to include from the loaded tables.
+To load all measurements, use `duration = "all"`.}
 }
 \value{
 A data frame object that contains the OD measurements from a

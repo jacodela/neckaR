@@ -8,7 +8,8 @@
 #' @param filename Full path to an Excel file with OD measurements from
 #' TECAN plate reader
 #' @param sheet Number of sheet to be read from Excel
-#' @param duration Maximum number of time points measured in the experiment
+#' @param duration Number of time points measured to include from the loaded tables.
+#' To load all measurements, use `duration = "all"`.
 #' @return A data frame object that contains the OD measurements from a
 #' single sheet in long format
 #' @export
@@ -17,7 +18,7 @@ Read_OD_24 = function(filename, sheet, duration){
 	## Second column, where the important data is
 	Second_col = unname(unlist(Raw_results[,2]))
 	## Row number where plate data is stored
-	Plate_index = grep('Plate', Second_col)[1]
+	Plate_index = grep("^Plate\\s\\d+", Second_col)[1]
 	## ID of the plate
 	## Only retain plate number
 	Plate_number = as.numeric(sub("Plate ", "", Second_col[Plate_index]))
@@ -25,9 +26,15 @@ Read_OD_24 = function(filename, sheet, duration){
 	## Times
 	Time_index = grep("Time", Second_col, ignore.case = FALSE)
 	## Values of time measurements
-	Time_vector = Raw_results[(Time_index[1]+1):(Time_index[1]+1+duration),2]# Find out the timepoints of your experiment
-	## Convert to numeric vector, remove NAs and convert to hours instead of days
-	Time_hours_zeros = as.numeric(unlist(Time_vector))*24
+	if(duration == "all"){
+		Time_vector = Raw_results[(Time_index[1]+1):nrow(Raw_results), 2]
+		Time_vector = suppressWarnings(as.numeric(unlist(Time_vector)))
+		Time_vector = Time_vector[1:(which(is.na(Time_vector))[1] - 1)]
+		Time_hours_zeros = Time_vector * 24
+	} else {
+		Time_vector = Raw_results[(Time_index[1]+1):(Time_index[1]+1+duration),2]# Find out the timepoints of your experiment
+		Time_hours_zeros = suppressWarnings(as.numeric(unlist(Time_vector))) * 24
+	}
 	## Time vector as hours and only the nonzero ones (except the first can be zero)
 	Time_hours_headless = Time_hours_zeros[-1]
 	Time_hours = c(Time_hours_zeros[1], Time_hours_headless[Time_hours_headless > 0])

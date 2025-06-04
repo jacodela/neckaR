@@ -6,9 +6,10 @@
 #' @param Data_files Path to Excel files from TECAN plate reader.
 #' @param Runs_path Path to Runs (a.k.a. Tab1) table
 #' @param Layout_path Path to Layout (a.k.a. Tab2) table
-#' @param Duration Maximum number of time points measured in the experiment
+#' @param duration Number of time points measured to include from the loaded tables.
+#' To load all measurements, use `duration = "all"`.
 #' @param Design_tab_col Name of column with design information in Runs and
-#' Layout tables
+#' Layout tables.
 #' @param Plate_type Type of plate. Possible values are "24-well" and "96-well"
 #' @return A data frame object that contains the OD measurements from a
 #' all the plates from all runs included, combined with the Runs and Layout

@@ -21,12 +21,16 @@ Adjust_OD = function(curves_df, control_factor, control_level, offset_control){
 
   ## scaling of OD values
   GCs_raw = curves_df %>%
-    dplyr::mutate(RRPP = as.numeric(substr(RRPPRCC, 1, nchar(RRPPRCC)-3))) %>% ## add a column for run and plate: RRPP
+  	dplyr::group_by(RRPPRCC) %>%
+  	dplyr::mutate(Time_rank = dplyr::min_rank(Time)) %>% # create column with measurement order per well
+  	dplyr::ungroup() %>%
+    dplyr::mutate(RRPP = as.numeric(substr(RRPPRCC, 1, nchar(RRPPRCC)-3))) %>% # add a column for run and plate: RRPP
     dplyr::filter(!is.na(OD)) %>% ## remove NAs
-    dplyr::mutate(Control = (!!rlang::sym(control_factor) == control_level)) %>%  ## flag control wells
+    dplyr::mutate(Control = (!!rlang::sym(control_factor) == control_level)) %>%  # flag control wells
     dplyr::group_by(RRPP, Strain) %>% ## zero all curves with respect to the control condition for each plate of each run (see RRPP above) per strain
-    dplyr::mutate(ODc0 = OD - median(OD[Control & Time < 0.5 ])) %>% ## Remove median OD of controls at time 0 from all OD measurements
-    dplyr::ungroup()
+    dplyr::mutate(ODc0 = OD - median(OD[Control & Time_rank == 1], na.rm = TRUE)) %>% ## Remove median OD of controls at first measurement from all OD measurements
+    dplyr::ungroup() %>%
+  	dplyr::select(-Time_rank)
 
   ## Control curves
   GCs_controls = GCs_raw %>%

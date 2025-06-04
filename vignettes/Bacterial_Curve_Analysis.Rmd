@@ -124,6 +124,10 @@ The `Make_master_df` function takes as input the folder with the raw data, the
 name of the raw data files and the `Runs` and `Layout` data frames. Make sure you 
 specify the name of the design column from the `Runs` file.
 
+You can specify the number of measurements to include using the `duration` parameter.
+By default, it includes 20. You can change this to a value of your choice. 
+(e.g. `duration = 24`). To include all measurements, use `duration = "all"`.
+
 ```{r}
 # Create master data frame
 master_df = Make_master_df(Data_folder = data_dir, 

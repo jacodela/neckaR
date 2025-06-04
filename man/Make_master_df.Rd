@@ -24,12 +24,13 @@ reader}
 
 \item{Layout_path}{Path to Layout (a.k.a. Tab2) table}
 
-\item{Duration}{Maximum number of time points measured in the experiment}
-
 \item{Design_tab_col}{Name of column with design information in Runs and
-Layout tables}
+Layout tables.}
 
 \item{Plate_type}{Type of plate. Possible values are "24-well" and "96-well"}
+
+\item{duration}{Number of time points measured to include from the loaded tables.
+To load all measurements, use `duration = "all"`.}
 }
 \value{
 A data frame object that contains the OD measurements from a
